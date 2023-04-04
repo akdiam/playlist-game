@@ -2,29 +2,57 @@ import Head from 'next/head';
 import { NextPage } from 'next';
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion'; 
+import cookie from 'cookie';
 
-interface Playlist {
-  title: string,
-  creator: string,
-  votes: number,
-  playlistId?: string,
-};
+import { getUserData, extractPlaylistId } from '../util/spotify';
+import { getPlaylists } from '../util/dbUtil';
+import { PlaylistEntry } from '@/components/PlaylistEntry';
+import { Playlist } from '@/const/interface';
 
-const Home: NextPage<{ playlists: Playlist[] }> = ({ playlists }) => {
-  const [featuredPlaylistId, setFeaturedPlaylistId] = useState('6EhWsKdmBEFPuO6QYzoFS3');
+const Home: NextPage<{ playlists: Playlist[], spotifyUser: Record<string, string> | null }> = ({ playlists, spotifyUser }) => {
+  const [featuredPlaylistId, setFeaturedPlaylistId] = useState(playlists[0]?.playlist_id ?? null);
+  const [playlistInputValue, setPlaylistInputValue] = useState('');
+
+  const spotifyProfileUrl = 'https://open.spotify.com/user/';
+  const spotifyAuthUrl = 'https://accounts.spotify.com/authorize?client_id=28abf050734148e7a3204c9be8368811&response_type=code&redirect_uri=http://localhost:3000/api/callback&scope=user-read-private&';
 
   const handleClick = (playlist: Playlist) => {
-    playlist.playlistId && setFeaturedPlaylistId(playlist.playlistId);
+    playlist.playlist_id && setFeaturedPlaylistId(playlist.playlist_id);
   };
 
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+
+    fetch('/api/playlists/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ playlistId: extractPlaylistId(playlistInputValue), userId: spotifyUser?.id, roundId: 'hi' })
+    }).then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.error(err);
+    });
+  };
+
+  const handleInputChange = (event: any) => {
+    setPlaylistInputValue(event.target.value);
+  }
+
   const iframeVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
   };
 
   const iframeTransition = {
-    duration: 0.3,
-    ease: 'easeInOut',
+    duration: 0.2,
+    ease: 'easeOut',
+  };
+
+  const playlistColorPalettes = {
+    false: 'bg-white text-black',
+    true: 'bg-black text-white'
   };
 
   return (
@@ -36,53 +64,73 @@ const Home: NextPage<{ playlists: Playlist[] }> = ({ playlists }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className='max-w-7xl mx-auto p-6'>
-        <div className='mb-12'>
-          <h1 className='text-3xl mb-6 font-semibold'>
+        <div className='pb-14 border-b-2 border-gray-700'>
+          <h1 className='text-4xl mb-6 font-semibold'>
             <span>welcome to </span><u>the playlist game</u>
+            {spotifyUser !== null && (<span>, {spotifyUser.display_name}!</span>)}
           </h1>
-          <h2 className='text-2xl mb-2'><i>to participate in today's game:</i></h2>
-          <ol>
-            <li>1. create a <strong>public</strong> Spotify playlist that you feel matches today's vibe (5 tracks minimum).</li>
-            <li>2. copy your Spotify playlist link and paste it below: </li>
-            <input className='bg-white border border-gray-400 rounded-sm mr-2'></input>
-            <button className='border border-gray-400 rounded-sm px-1'>submit</button>
-            <li>3. browse & vote for your favorites! </li>
-          </ol>
+          <div className='text-3xl'>today&apos;s playlist aura: </div>
+          <h2 className='text-3xl md:text-4xl lg:text-7xl font-bold text-red-400 mb-6'>LUDICROUSLY CAPACIOUS</h2>
+          {spotifyUser === null && (
+            <>
+              <h2 className='text-3xl mb-2'>to submit and vote:</h2>
+              <a href={spotifyAuthUrl}>
+                <button className='border border-gray-400 rounded-sm px-3 py-1'>
+                  Login with Spotify
+                </button>
+              </a>
+            </>
+          )}
+          {spotifyUser !== null && (
+            <div>
+              <p className='pb-2'>to participate, submit your <strong>public</strong> Spotify playlist link below:</p>
+              <form onSubmit={handleSubmit}>
+                <input 
+                  onChange={handleInputChange} 
+                  value={playlistInputValue} 
+                  className='bg-white border border-gray-400 rounded-sm mr-2 p-1' />
+                <button className='border border-gray-400 rounded-sm px-3 py-1'>submit</button>
+              </form>
+            </div>
+          )}
         </div>
-        <hr />
-        <div className='text-3xl mx-auto my-12'>
-          <span>today's vibe: </span>
-          <span className='text-red-400 text-6xl'><strong>LUDICROUSLY CAPACIOUS</strong></span>
-        </div>
-        <div className='flex flex-wrap'>
-          <table className={`w-full md:w-1/2 pr-6 max-h-full overflow-y-auto`}>
-            {playlists.map((playlist, _) => (
-              <tr key={playlist.title} className={`border border-red-400 h-24 ${playlist?.playlistId === featuredPlaylistId && 'bg-gray-200'}`} onClick={() => handleClick(playlist)}>
-                <td className='py-3 px-3'>{playlist.title}</td>
-                <td>{playlist.creator}</td>
-                <td>{playlist.votes}</td>
-              </tr>
-            ))}
-          </table>
-          <div className='relative w-full md:w-1/2 h-full px-6'>
-            <AnimatePresence>
-              <motion.div className='absolute inset-0 w-full pl-6'
-                  key={featuredPlaylistId}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  variants={iframeVariants}
-                  transition={iframeTransition}
+        <div className='md:flex'>
+          <ul className={`w-full md:w-1/2 border-r-2 border-gray-700`}>
+            {playlists.map((playlist, i) => (
+              <li
+                key={playlist.name}
+                className={`border-b w-full border-gray-700 border-dotted flex flex-row justify-between h-30 hover:cursor-pointer ${playlist?.playlist_id !== featuredPlaylistId && 'hover:bg-green-200'} ${playlistColorPalettes[playlist?.playlist_id === featuredPlaylistId]}`}
+                onClick={() => handleClick(playlist)}
               >
-                <iframe 
-                        src={`https://open.spotify.com/embed/playlist/${featuredPlaylistId}`}
-                        width="100%"
-                        height="550px"
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                        loading="lazy"
-                />
-              </motion.div>
-            </AnimatePresence>
+                <PlaylistEntry playlist={playlist} rank={i + 1} isLiked={false} />
+              </li>
+            ))}
+          </ul>
+          <div className='w-full md:w-1/2 pl-6 mt-6'>
+            <div className='sticky top-6 z-10 bg-white'>
+              <div className='font-bold pb-2 text-5xl text-gray-700'><i className='text-lg font-normal text-slate-300'>rank</i> #1</div>
+              <div className='md:relative'>
+                <AnimatePresence mode='popLayout'>
+                  <motion.div 
+                    className='md:absolute inset-0 w-full'
+                    key={featuredPlaylistId}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    variants={iframeVariants}
+                    transition={iframeTransition}
+                  >
+                    <iframe 
+                      src={`https://open.spotify.com/embed/playlist/${featuredPlaylistId}`}
+                      width="100%"
+                      height="470px"
+                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                      loading="lazy"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -90,62 +138,23 @@ const Home: NextPage<{ playlists: Playlist[] }> = ({ playlists }) => {
   )
 }
 
-export async function getStaticProps(){
-  const playlists: Playlist[] = [
-    {
-      'title': 'playlist 1',
-      'creator': 'user1',
-      'votes': 5,
-      'playlistId': '4yrjcrcigdxcWVJHSrNaVc',
-    },
-    {
-      'title': 'playlist 2',
-      'creator': 'user2',
-      'votes': 2,
-      'playlistId': '6EhWsKdmBEFPuO6QYzoFS3',
-    },
-    {
-      'title': 'playlist 3',
-      'creator': 'user1',
-      'votes': 0
-    },
-    {
-      'title': 'playlist 3',
-      'creator': 'user1',
-      'votes': 3
-    },
-    {
-      'title': 'playlist 4',
-      'creator': 'user4',
-      'votes': 3
-    },
-    {
-      'title': 'playlist 4',
-      'creator': 'user4',
-      'votes': 3
-    },
-    {
-      'title': 'playlist 4',
-      'creator': 'user4',
-      'votes': 3
-    },
-    {
-      'title': 'playlist 4',
-      'creator': 'user4',
-      'votes': 3
-    },
-    {
-      'title': 'playlist 4',
-      'creator': 'user4',
-      'votes': 3
-    },
-  ];
+export async function getServerSideProps(context: Record<string, any>) {
+  const cookies = cookie.parse(context.req.headers.cookie || '');
+
+  // Get the access token from the cookies
+  const accessToken = cookies.access_token;
+  const spotifyUser = await getUserData(accessToken).catch((error) => {
+    console.error('Error fetching user data:', error);
+    return null;
+  });
+
+  const playlists = await getPlaylists(0, 'hi');
 
   return {
     props: {
       playlists,
-    },
-    revalidate: 20,
+      spotifyUser,
+    }
   }
 }
 
