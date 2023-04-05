@@ -1,58 +1,31 @@
 import Head from 'next/head';
 import { NextPage } from 'next';
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion'; 
+import { useReducer, useState } from 'react';
 import cookie from 'cookie';
 
-import { getUserData, extractPlaylistId } from '../util/spotify';
+import { getUserData } from '../util/spotify';
 import { getPlaylists } from '../util/dbUtil';
-import { PlaylistEntry } from '@/components/PlaylistEntry';
 import { Playlist } from '@/const/interface';
+import { renderedPlaylistsReducer } from '@/lib/reducers';
+import { SubmissionList } from '@/components/SubmissionList';
+import { FeaturedPlaylistContainer } from '@/components/FeaturedPlaylistContainer';
+import { ActionBox } from '@/components/ActionBox';
 
 const Home: NextPage<{ playlists: Playlist[], spotifyUser: Record<string, string> | null }> = ({ playlists, spotifyUser }) => {
-  const [featuredPlaylistId, setFeaturedPlaylistId] = useState(playlists[0]?.playlist_id ?? null);
-  const [playlistInputValue, setPlaylistInputValue] = useState('');
+  const [featuredPlaylist, setFeaturedPlaylist] = useState(playlists[0] ?? null);
+  const [featuredPlaylistRank, setFeaturedPlaylistRank] = useState(1);
+  const [renderedPlaylists, dispatchRenderedPlaylists] = useReducer<(arg1: Playlist[], actions: any) => Playlist[]>(renderedPlaylistsReducer, playlists);
 
   const spotifyProfileUrl = 'https://open.spotify.com/user/';
-  const spotifyAuthUrl = 'https://accounts.spotify.com/authorize?client_id=28abf050734148e7a3204c9be8368811&response_type=code&redirect_uri=http://localhost:3000/api/callback&scope=user-read-private&';
 
-  const handleClick = (playlist: Playlist) => {
-    playlist.playlist_id && setFeaturedPlaylistId(playlist.playlist_id);
+  const handleClick = (playlist: Playlist, rank: number) => {
+    playlist.playlist_id && setFeaturedPlaylist(playlist);
+    setFeaturedPlaylistRank(rank);
   };
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-
-    fetch('/api/playlists/submit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ playlistId: extractPlaylistId(playlistInputValue), userId: spotifyUser?.id, roundId: 'hi' })
-    }).then(res => {
-      console.log(res);
-    }).catch(err => {
-      console.error(err);
-    });
-  };
-
-  const handleInputChange = (event: any) => {
-    setPlaylistInputValue(event.target.value);
-  }
-
-  const iframeVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
-
-  const iframeTransition = {
-    duration: 0.2,
-    ease: 'easeOut',
-  };
-
-  const playlistColorPalettes = {
-    false: 'bg-white text-black',
-    true: 'bg-black text-white'
+  const refreshList = async () => {
+    // const top100 = await getPlaylists(0, 'hi');
+    // dispatchRenderedPlaylists({ type: 'add', playlists: top100 });
   };
 
   return (
@@ -69,69 +42,14 @@ const Home: NextPage<{ playlists: Playlist[], spotifyUser: Record<string, string
             <span>welcome to </span><u>the playlist game</u>
             {spotifyUser !== null && (<span>, {spotifyUser.display_name}!</span>)}
           </h1>
-          <div className='text-3xl'>today&apos;s playlist aura: </div>
-          <h2 className='text-3xl md:text-4xl lg:text-7xl font-bold text-red-400 mb-6'>LUDICROUSLY CAPACIOUS</h2>
-          {spotifyUser === null && (
-            <>
-              <h2 className='text-3xl mb-2'>to submit and vote:</h2>
-              <a href={spotifyAuthUrl}>
-                <button className='border border-gray-400 rounded-sm px-3 py-1'>
-                  Login with Spotify
-                </button>
-              </a>
-            </>
-          )}
-          {spotifyUser !== null && (
-            <div>
-              <p className='pb-2'>to participate, submit your <strong>public</strong> Spotify playlist link below:</p>
-              <form onSubmit={handleSubmit}>
-                <input 
-                  onChange={handleInputChange} 
-                  value={playlistInputValue} 
-                  className='bg-white border border-gray-400 rounded-sm mr-2 p-1' />
-                <button className='border border-gray-400 rounded-sm px-3 py-1'>submit</button>
-              </form>
-            </div>
-          )}
+          <div className='text-2xl'>today&apos;s playlist aura: </div>
+          <h2 id='aura' className='text-3xl md:text-4xl lg:text-7xl font-bold text-red-400 mb-6'>LUDICROUSLY CAPACIOUS</h2>
+          <ActionBox spotifyUser={spotifyUser} />
+          <button className='p-2' onClick={refreshList}>refresh</button>
         </div>
         <div className='md:flex'>
-          <ul className={`w-full md:w-1/2 border-r-2 border-gray-700`}>
-            {playlists.map((playlist, i) => (
-              <li
-                key={playlist.name}
-                className={`border-b w-full border-gray-700 border-dotted flex flex-row justify-between h-30 hover:cursor-pointer ${playlist?.playlist_id !== featuredPlaylistId && 'hover:bg-green-200'} ${playlistColorPalettes[playlist?.playlist_id === featuredPlaylistId]}`}
-                onClick={() => handleClick(playlist)}
-              >
-                <PlaylistEntry playlist={playlist} rank={i + 1} isLiked={false} />
-              </li>
-            ))}
-          </ul>
-          <div className='w-full md:w-1/2 pl-6 mt-6'>
-            <div className='sticky top-6 z-10 bg-white'>
-              <div className='font-bold pb-2 text-5xl text-gray-700'><i className='text-lg font-normal text-slate-300'>rank</i> #1</div>
-              <div className='md:relative'>
-                <AnimatePresence mode='popLayout'>
-                  <motion.div 
-                    className='md:absolute inset-0 w-full'
-                    key={featuredPlaylistId}
-                    initial="hidden"
-                    animate="visible"
-                    exit="hidden"
-                    variants={iframeVariants}
-                    transition={iframeTransition}
-                  >
-                    <iframe 
-                      src={`https://open.spotify.com/embed/playlist/${featuredPlaylistId}`}
-                      width="100%"
-                      height="470px"
-                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                      loading="lazy"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
+          <SubmissionList renderedPlaylists={renderedPlaylists} featuredPlaylist={featuredPlaylist} handleClick={handleClick} />
+          <FeaturedPlaylistContainer featuredPlaylist={featuredPlaylist} rank={featuredPlaylistRank} />
         </div>
       </main>
     </>

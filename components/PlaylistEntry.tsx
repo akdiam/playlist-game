@@ -13,7 +13,8 @@ export const PlaylistEntry = (props: PlaylistEntryProps) => {
       </div>
       <div className='col-span-9 flex flex-col w-auto grid-rows-2'>
         <div className='row-span-1 font-bold text-xl mb-1 truncate'>
-          {props.playlist.name}
+          {props.playlist.name.length > 0 && <span>{props.playlist.name}</span>}
+          {props.playlist.name.length === 0 && (<span>&empty;</span>)}
         </div>
         <div className='row-span-1 text-xs font-thin truncate'>
           <i>{`submitted by ${props.playlist.display_name} at ${props.playlist.submission_time} UTC`}</i>

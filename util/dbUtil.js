@@ -2,34 +2,20 @@ import pool from "../lib/db";
 
 const PAGE_SIZE = 100;
 
-export async function submitPlaylist(id, playlistId, userId, name, currentDate, currentTime, roundId) {
-  // Check if the user has already submitted a playlist today
-  // Replace 'your_schema_name' with your actual schema name
-  /*const { rows } = await pool.query(
-    `SELECT COUNT(*) AS submissions_count
-     FROM your_schema_name.playlist_submissions
-     WHERE submitted_by = $1
-     AND DATE(submission_date) = CURRENT_DATE;`,
-    [userId]
-  );
-
-  if (parseInt(rows[0].submissions_count) > 0) {
-    throw new Error('User has already submitted a playlist today.');
-  }*/
-
-  // Submit the new playlist
-  await pool.query(
+export async function submitPlaylist(id, playlistId, userId, name, roundId) {
+  const { rows } = await pool.query(
     `INSERT INTO playlistgame.playlists (id, playlist_id, user_id, name, submission_date, submission_time, round_id)
-     VALUES ($1, $2, $3, $4, CURRENT_DATE, CURRENT_TIME, $5);`,
+     VALUES ($1, $2, $3, $4, CURRENT_DATE, CURRENT_TIME, $5)
+     RETURNING *;`,
     [id, playlistId, userId, name, roundId]
   );
 
-  return 'Playlist submitted successfully.';
+  return rows && rows.length > 0 ? JSON.parse(JSON.stringify(rows[0])) : null;
 }
 
 // Get page n of round i
 export async function getPlaylists(page, roundId) {
-  const res = await pool.query(
+  const { rows } = await pool.query(
     `SELECT
       p.id,
       p.playlist_id,
@@ -62,7 +48,7 @@ export async function getPlaylists(page, roundId) {
     LIMIT ${PAGE_SIZE} OFFSET ${page * PAGE_SIZE};`
   );
   
-  return JSON.parse(JSON.stringify(res.rows));
+  return JSON.parse(JSON.stringify(rows));
 }
 
 // Should do 2 things:

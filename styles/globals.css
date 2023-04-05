@@ -22,3 +22,7 @@ a {
     color-scheme: dark;
   }
 }
+
+iframe {
+  height: 60vh;
+}
