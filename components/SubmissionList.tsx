@@ -8,7 +8,7 @@ export const SubmissionList = (props: SubmissionListProps) => {
       <li
         key={playlist.id}
         className={`border-b w-full border-gray-700 border-dotted flex flex-row justify-between h-30 hover:cursor-pointer ${playlist?.id !== props.featuredPlaylist.id && 'hover:bg-green-200'} ${playlist?.id === props.featuredPlaylist.id ? 'bg-black text-white' : 'bg-white text-black'}`}
-        onClick={() => props.handleClick(playlist, i)}
+        onClick={() => props.handleClick(playlist, i + 1)}
       >
         <PlaylistEntry playlist={playlist} rank={i + 1} isLiked={false} />
       </li>

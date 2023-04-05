@@ -4,12 +4,12 @@ import { FeaturedPlaylistInfoBar } from './FeaturedPlaylistInfoBar';
 
 export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps) => {
   const iframeVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
+    hidden: { opacity: 0, scale: 0.97 },
+    visible: { opacity: 1, scale: 1 },
   };
 
   const iframeTransition = {
-    duration: 0.2,
+    duration: 0.15,
     ease: 'easeOut',
   };
 
@@ -18,7 +18,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
       <div className='sticky top-6 z-10 bg-white'>
         <div className='md:relative'>
           <AnimatePresence mode='popLayout'>
-            <motion.div 
+            <motion.div
               className='md:absolute inset-0 w-full'
               key={props.featuredPlaylist.playlist_id}
               initial="hidden"
@@ -28,7 +28,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
               transition={iframeTransition}
             >
               <FeaturedPlaylistInfoBar playlist={props.featuredPlaylist} rank={props.rank} isLiked={false} />
-              <iframe 
+              <iframe
                 src={`https://open.spotify.com/embed/playlist/${props.featuredPlaylist.playlist_id}`}
                 width="100%"
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
@@ -39,5 +39,5 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
         </div>
       </div>
     </div>
-  )
+  );
 };
