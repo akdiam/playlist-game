@@ -12,9 +12,20 @@ export async function submitPlaylist(
   coverImageSrc
 ) {
   const { rows } = await pool.query(
-    `INSERT INTO playlistgame.playlists (id, playlist_id, user_id, name, submission_date, submission_time, round_id, cover_image_src)
-     VALUES ($1, $2, $3, $4, CURRENT_DATE, CURRENT_TIME, $5, $6)
-     RETURNING *;`,
+    `WITH ins AS (
+      INSERT INTO playlistgame.playlists (id, playlist_id, user_id, name, submission_date, submission_time, round_id, cover_image_src)
+      VALUES ($1, $2, $3, $4, CURRENT_DATE, CURRENT_TIME, $5, $6)
+      ON CONFLICT (id) DO UPDATE SET
+        name = EXCLUDED.name,
+        cover_image_src = EXCLUDED.cover_image_src
+      RETURNING id, name, cover_image_src
+    )
+
+    SELECT p.id, p.playlist_id, p.user_id, ins.name, p.submission_date, p.submission_time, p.round_id, ins.cover_image_src, COUNT(v.id) as votes
+      FROM ins
+      JOIN playlistgame.playlists p ON ins.id = p.id
+      LEFT JOIN playlistgame.votes v ON p.id = v.playlist_id
+      GROUP BY p.id, ins.name, ins.cover_image_src;`,
     [id, playlistId, userId, name, roundId, coverImageSrc]
   );
 
@@ -59,9 +70,13 @@ export async function getPlaylists(page, roundId) {
   return JSON.parse(JSON.stringify(rows));
 }
 
-// Should do 2 things:
-// 1. Check - does this user exist in db yet? If not, add to db
-// 2. Check - has this user submitted a playlist today?
+/**
+ * Returns user's submitted playlist for roundId, if it exists.
+ * If user doesn't exist in DB, create user.
+ * @param {Record<string, any>} spotifyUser
+ * @param {string} roundId
+ * @returns {Playlist | null}
+ */
 export async function getSubmittedPlaylist(spotifyUser, roundId) {
   const id = randomUUID();
 
@@ -80,17 +95,18 @@ export async function getSubmittedPlaylist(spotifyUser, roundId) {
       SELECT *
       FROM playlistgame.playlists p
       WHERE p.user_id = $2
-      AND p.round_id = $4;`,
+      AND p.round_id = $4
+      ORDER BY
+        p.submission_date ASC,
+        p.submission_time ASC;`,
       [id, spotifyUser.id, spotifyUser.display_name, roundId]
     );
-
-    console.log(rows);
 
     if (rows.length > 0) {
       return JSON.parse(JSON.stringify(rows));
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 
   return null;

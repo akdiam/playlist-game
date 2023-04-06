@@ -1,6 +1,5 @@
 export default async (req, res) => {
   const accessToken = req.cookies.access_token;
-  console.log('access token is ' + JSON.stringify(req.cookies));
 
   if (!accessToken) {
     res.status(401).json({ error: 'Unauthorized' });

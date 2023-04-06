@@ -9,6 +9,7 @@ export const ActionBox = (props: ActionBoxProps) => {
     props.submittedPlaylist
   );
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const [isSyncLoading, setIsSyncLoading] = useState(false);
   const [playlistInputValue, setPlaylistInputValue] = useState('');
 
   const spotifyAuthUrl =
@@ -18,6 +19,7 @@ export const ActionBox = (props: ActionBoxProps) => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     setIsSubmitLoading(true);
+    setIsSyncLoading(true);
 
     try {
       const response = await fetch('/api/playlists/submit', {
@@ -26,10 +28,13 @@ export const ActionBox = (props: ActionBoxProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          playlistId: extractPlaylistId(playlistInputValue),
+          playlistId: submittedPlaylist
+            ? submittedPlaylist.playlist_id
+            : extractPlaylistId(playlistInputValue),
           userId: props.spotifyUser?.id,
           roundId: 'hi',
           displayName: props.spotifyUser?.display_name,
+          id: submittedPlaylist?.id,
         }),
       });
       const responseJson: any = await response.json();
@@ -39,6 +44,7 @@ export const ActionBox = (props: ActionBoxProps) => {
     }
 
     setIsSubmitLoading(false);
+    setIsSyncLoading(false);
   };
 
   const handleInputChange = (event: any) => {
@@ -58,11 +64,11 @@ export const ActionBox = (props: ActionBoxProps) => {
         </>
       )}
       {props.spotifyUser !== null && (
-        <div key={submittedPlaylist ? 'submitted' : 'notSubmitted'}>
+        <div>
           {submittedPlaylist && (
             <>
               <div className="text-2xl mb-3">your submission:</div>
-              <div className="w-full md:w-1/2 flex p-3 border border-black text-black rounded-xl">
+              <div className="w-full md:w-1/2 flex p-3 border border-black text-black rounded-xl shadow-sm">
                 <a href={spotifyPlaylistUrl + submittedPlaylist.playlist_id}>
                   <Image
                     className="rounded-md object-cover border border-black"
@@ -74,18 +80,28 @@ export const ActionBox = (props: ActionBoxProps) => {
                 </a>
                 <div className="pl-3 w-full flex flex-wrap flex-col justify-between">
                   <div>
-                    <div className="flex-wrap text-lg md:text-xl font-bold mb-2 leading-tight line-clamp-3 break-all">
+                    <div className="flex-wrap text-lg md:text-xl font-bold mb-2 leading-tight line-clamp-2 md:line-clamp-3 break-all">
                       {submittedPlaylist.name}
                     </div>
                     <div className="text-xs md:text-sm">
-                      <button className="border border-black py-1 px-3 rounded-md">
-                        change submission
+                      <button className="border border-red-500 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-700 py-1 px-3 rounded-md">
+                        remove submission
                       </button>
                     </div>
                   </div>
                   <div className="text-xs italic font-thin">
-                    <a href="/">click here</a> to sync playlist name & cover
-                    image.
+                    {!isSyncLoading && (
+                      <>
+                        <span
+                          className="underline hover:cursor-pointer"
+                          onClick={handleSubmit}
+                        >
+                          click here
+                        </span>{' '}
+                        to sync playlist name & cover image.
+                      </>
+                    )}
+                    {isSyncLoading && <span>syncing with Spotify...</span>}
                   </div>
                 </div>
               </div>
@@ -116,3 +132,5 @@ export const ActionBox = (props: ActionBoxProps) => {
     </>
   );
 };
+
+const SubmissionForm = () => {};

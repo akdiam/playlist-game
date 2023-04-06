@@ -6,8 +6,11 @@ import { Playlist } from '@/const/interface';
 export default async function handler(req: any, res: any) {
   if (req.method === 'POST') {
     try {
-      const playlistInfoFromSpotify = await getPlaylistInfo(req.body.playlistId, req.cookies.access_token);
-      const id = randomUUID();
+      const playlistInfoFromSpotify = await getPlaylistInfo(
+        req.body.playlistId,
+        req.cookies.access_token
+      );
+      const id = req.body.id ? req.body.id : randomUUID();
       const playlistId = req.body.playlistId;
       const userId = req.body.userId;
       const name = playlistInfoFromSpotify.name;
@@ -15,12 +18,18 @@ export default async function handler(req: any, res: any) {
       const displayName = req.body.displayName;
       const coverImageSrc = playlistInfoFromSpotify.images[0].url;
 
-      let submittedPlaylist: Playlist = await submitPlaylist(id, playlistId, userId, name, roundId, coverImageSrc);
+      let submittedPlaylist: Playlist = await submitPlaylist(
+        id,
+        playlistId,
+        userId,
+        name,
+        roundId,
+        coverImageSrc
+      );
       submittedPlaylist.display_name = displayName;
-      submittedPlaylist.votes = '0';
       res.status(200).json({ submittedPlaylist });
     } catch (error: any) {
-      console.log(error.message);
+      console.error(error.message);
       res.status(500).json({ error: error.message });
     }
   } else {

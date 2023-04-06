@@ -92,7 +92,6 @@ export async function getServerSideProps(context: Record<string, any>) {
       submittedPlaylist = submittedPlaylists[0];
     }
   }
-  // const submittedPlaylist = await getSubmittedPlaylist(spotifyUser, roundId);
   const playlists = await getPlaylists(0, roundId);
 
   return {
