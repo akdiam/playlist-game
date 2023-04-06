@@ -16,12 +16,6 @@ a {
   text-decoration: underline;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
-
 iframe {
   height: 60vh;
 }

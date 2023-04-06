@@ -9,7 +9,7 @@ export const extractPlaylistId = (playlistUrl: string) => {
   }
 }
 
-export async function getUserData(accessToken: string) {
+export async function getSpotifyUser(accessToken: string) {
   try {
     const response = await axios.get('https://api.spotify.com/v1/me', {
       headers: {

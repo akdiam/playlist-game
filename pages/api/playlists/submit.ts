@@ -13,9 +13,9 @@ export default async function handler(req: any, res: any) {
       const name = playlistInfoFromSpotify.name;
       const roundId = req.body.roundId;
       const displayName = req.body.displayName;
+      const coverImageSrc = playlistInfoFromSpotify.images[0].url;
 
-      let submittedPlaylist: Playlist = await submitPlaylist(id, playlistId, userId, name, roundId);
-      submittedPlaylist.cover_image = playlistInfoFromSpotify.images[0].url;
+      let submittedPlaylist: Playlist = await submitPlaylist(id, playlistId, userId, name, roundId, coverImageSrc);
       submittedPlaylist.display_name = displayName;
       submittedPlaylist.votes = '0';
       res.status(200).json({ submittedPlaylist });

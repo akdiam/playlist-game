@@ -1,8 +1,10 @@
 import { FeaturedPlaylistContainerProps } from '@/const/interface';
-import { AnimatePresence, motion } from 'framer-motion'; 
+import { AnimatePresence, motion } from 'framer-motion';
 import { FeaturedPlaylistInfoBar } from './FeaturedPlaylistInfoBar';
 
-export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps) => {
+export const FeaturedPlaylistContainer = (
+  props: FeaturedPlaylistContainerProps
+) => {
   const iframeVariants = {
     hidden: { opacity: 0, scale: 0.97 },
     visible: { opacity: 1, scale: 1 },
@@ -14,28 +16,35 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
   };
 
   return (
-    <div className='w-full md:w-1/2 pl-6 mt-6'>
-      <div className='sticky top-6 z-10 bg-white'>
-        <div className='md:relative'>
-          <AnimatePresence mode='popLayout'>
-            <motion.div
-              className='md:absolute inset-0 w-full'
-              key={props.featuredPlaylist.playlist_id}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={iframeVariants}
-              transition={iframeTransition}
-            >
-              <FeaturedPlaylistInfoBar playlist={props.featuredPlaylist} rank={props.rank} isLiked={false} />
-              <iframe
-                src={`https://open.spotify.com/embed/playlist/${props.featuredPlaylist.playlist_id}`}
-                width="100%"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                loading="lazy"
-              />
-            </motion.div>
-          </AnimatePresence>
+    <div className="w-full md:w-1/2 pl-6 mt-6">
+      <div className="sticky top-6 z-10 bg-white">
+        <div className="md:relative">
+          {props.featuredPlaylist && (
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                className="md:absolute inset-0 w-full"
+                key={props.featuredPlaylist.playlist_id}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={iframeVariants}
+                transition={iframeTransition}
+              >
+                <FeaturedPlaylistInfoBar
+                  playlist={props.featuredPlaylist}
+                  rank={props.rank}
+                  isLiked={false}
+                />
+                <iframe
+                  src={`https://open.spotify.com/embed/playlist/${props.featuredPlaylist.playlist_id}`}
+                  width="100%"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                />
+              </motion.div>
+            </AnimatePresence>
+          )}
+          {!props.featuredPlaylist && <div>no submissions yet!</div>}
         </div>
       </div>
     </div>

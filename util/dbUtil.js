@@ -1,13 +1,21 @@
-import pool from "../lib/db";
+import { randomUUID } from 'crypto';
+import pool from '../lib/db';
 
 const PAGE_SIZE = 100;
 
-export async function submitPlaylist(id, playlistId, userId, name, roundId) {
+export async function submitPlaylist(
+  id,
+  playlistId,
+  userId,
+  name,
+  roundId,
+  coverImageSrc
+) {
   const { rows } = await pool.query(
-    `INSERT INTO playlistgame.playlists (id, playlist_id, user_id, name, submission_date, submission_time, round_id)
-     VALUES ($1, $2, $3, $4, CURRENT_DATE, CURRENT_TIME, $5)
+    `INSERT INTO playlistgame.playlists (id, playlist_id, user_id, name, submission_date, submission_time, round_id, cover_image_src)
+     VALUES ($1, $2, $3, $4, CURRENT_DATE, CURRENT_TIME, $5, $6)
      RETURNING *;`,
-    [id, playlistId, userId, name, roundId]
+    [id, playlistId, userId, name, roundId, coverImageSrc]
   );
 
   return rows && rows.length > 0 ? JSON.parse(JSON.stringify(rows[0])) : null;
@@ -47,13 +55,43 @@ export async function getPlaylists(page, roundId) {
       p.submission_time DESC
     LIMIT ${PAGE_SIZE} OFFSET ${page * PAGE_SIZE};`
   );
-  
+
   return JSON.parse(JSON.stringify(rows));
 }
 
 // Should do 2 things:
 // 1. Check - does this user exist in db yet? If not, add to db
 // 2. Check - has this user submitted a playlist today?
-export async function validateUser() {
+export async function getSubmittedPlaylist(spotifyUser, roundId) {
+  const id = randomUUID();
 
+  try {
+    const { rows } = await pool.query(
+      `WITH user_check AS (
+        INSERT INTO playlistgame.users (id, user_id, display_name)
+        SELECT $1, $2, $3
+        WHERE NOT EXISTS (
+          SELECT 1
+          FROM playlistgame.users u
+          WHERE u.user_id = $2
+        )
+      )
+
+      SELECT *
+      FROM playlistgame.playlists p
+      WHERE p.user_id = $2
+      AND p.round_id = $4;`,
+      [id, spotifyUser.id, spotifyUser.display_name, roundId]
+    );
+
+    console.log(rows);
+
+    if (rows.length > 0) {
+      return JSON.parse(JSON.stringify(rows));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return null;
 }

@@ -8,7 +8,7 @@ export interface Playlist {
   submission_time: string,
   round_id: string,
   votes: string,
-  cover_image?: string,
+  cover_image_src: string,
 };
 
 export interface PlaylistEntryProps {
@@ -30,4 +30,5 @@ export interface FeaturedPlaylistContainerProps {
 
 export interface ActionBoxProps {
   spotifyUser: Record<string, string> | null,
-}
+  submittedPlaylist: Playlist | null,
+};
