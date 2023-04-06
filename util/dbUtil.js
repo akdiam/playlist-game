@@ -32,6 +32,17 @@ export async function submitPlaylist(
   return rows && rows.length > 0 ? JSON.parse(JSON.stringify(rows[0])) : null;
 }
 
+export async function removePlaylist(submissionId) {
+  try {
+    await pool.query(`DELETE FROM playlistgame.playlists WHERE id = $1;`, [
+      submissionId,
+    ]);
+    return 200;
+  } catch (e) {
+    return 500;
+  }
+}
+
 // Get page n of round i
 export async function getPlaylists(page, roundId) {
   const { rows } = await pool.query(

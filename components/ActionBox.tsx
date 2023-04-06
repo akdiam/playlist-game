@@ -47,6 +47,23 @@ export const ActionBox = (props: ActionBoxProps) => {
     setIsSyncLoading(false);
   };
 
+  const handleRemove = async () => {
+    try {
+      const response = await fetch('/api/playlists/remove', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          submissionId: submittedPlaylist?.id,
+        }),
+      });
+      response.status === 200 && setSubmittedPlaylist(null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleInputChange = (event: any) => {
     setPlaylistInputValue(event.target.value);
   };
@@ -68,7 +85,7 @@ export const ActionBox = (props: ActionBoxProps) => {
           {submittedPlaylist && (
             <>
               <div className="text-2xl mb-3">your submission:</div>
-              <div className="w-full md:w-1/2 flex p-3 border border-black text-black rounded-xl shadow-sm">
+              <div className="w-full md:w-1/3 flex p-3 border border-black text-black rounded-xl shadow-sm">
                 <a href={spotifyPlaylistUrl + submittedPlaylist.playlist_id}>
                   <Image
                     className="rounded-md object-cover border border-black"
@@ -80,11 +97,14 @@ export const ActionBox = (props: ActionBoxProps) => {
                 </a>
                 <div className="pl-3 w-full flex flex-wrap flex-col justify-between">
                   <div>
-                    <div className="flex-wrap text-lg md:text-xl font-bold mb-2 leading-tight line-clamp-2 md:line-clamp-3 break-all">
+                    <div className="flex-wrap text-lg md:text-xl font-bold mb-2 leading-tight line-clamp-2 break-all">
                       {submittedPlaylist.name}
                     </div>
                     <div className="text-xs md:text-sm">
-                      <button className="border border-red-500 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-700 py-1 px-3 rounded-md">
+                      <button
+                        onClick={handleRemove}
+                        className="border border-red-500 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-700 py-1 px-3 rounded-md"
+                      >
                         remove submission
                       </button>
                     </div>
@@ -98,7 +118,7 @@ export const ActionBox = (props: ActionBoxProps) => {
                         >
                           click here
                         </span>{' '}
-                        to sync playlist name & cover image.
+                        to sync playlist name & cover image with Spotify.
                       </>
                     )}
                     {isSyncLoading && <span>syncing with Spotify...</span>}

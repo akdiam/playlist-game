@@ -42,7 +42,7 @@ const Home: NextPage<{
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="max-w-7xl mx-auto p-6">
+      <main className="max-w-7xl mx-auto p-3 md:p-6">
         <div className="pb-14 border-b-2 border-gray-700">
           <h1 className="text-4xl mb-6 font-semibold">
             <span>welcome to </span>
