@@ -8,6 +8,8 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentInputValue, setCommentInputValue] = useState('');
 
+  const spotifyUserUrl = 'https://open.spotify.com/user/';
+
   const loadComments = async () => {
     setAreCommentsLoading(true);
     try {
@@ -66,7 +68,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
   }, [props.featuredPlaylist.id]);
 
   return (
-    <div className="flex flex-col justify-between md:w-1/2 lg:w-1/3 invisible md:visible border border-black rounded-md ml-3">
+    <div className="commentsContainer flex flex-col justify-between md:w-1/2 lg:w-1/3 invisible md:visible border border-black rounded-md ml-3">
       <div className="p-3 italic font-bold border-b border-black">comments</div>
       {areCommentsLoading && (
         <div className="mx-auto">
@@ -79,11 +81,13 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
             <div className="px-3 text-sm text-gray-400">ahhh, the sound of silence...</div>
           )}
           {comments.length > 0 && (
-            <div className="p-3 flex-grow overflow-auto">
+            <div className="overflowContainer p-3 flex-grow overflow-auto">
               {comments.map((comment: Comment, _) => (
                 <>
-                  <div className="pb-1 text-sm font-bold">{comment.display_name}</div>
-                  <div className="pb-2 text-sm">{comment.content}</div>
+                  <a href={spotifyUserUrl + comment.user_id} className="pb-1 text-sm font-bold">
+                    {comment.display_name}
+                  </a>
+                  <div className="pb-2 text-sm break-all">{comment.content}</div>
                 </>
               ))}
             </div>
