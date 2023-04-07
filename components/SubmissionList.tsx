@@ -3,7 +3,7 @@ import { PlaylistEntry } from './PlaylistEntry';
 
 export const SubmissionList = (props: SubmissionListProps) => {
   return (
-    <ul className={`w-full md:w-1/2 md:border-r-2 border-gray-700`}>
+    <ul className={`w-full md:w-1/3 md:border-r-2 border-gray-700`}>
       {props.renderedPlaylists.map((playlist, i) => (
         <li
           key={playlist.id}

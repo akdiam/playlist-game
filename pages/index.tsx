@@ -16,9 +16,7 @@ const Home: NextPage<{
   spotifyUser: Record<string, string> | null;
   submittedPlaylist: Playlist | null;
 }> = ({ playlists, spotifyUser, submittedPlaylist }) => {
-  const [featuredPlaylist, setFeaturedPlaylist] = useState(
-    playlists[0] ?? null
-  );
+  const [featuredPlaylist, setFeaturedPlaylist] = useState(playlists[0] ?? null);
   const [featuredPlaylistRank, setFeaturedPlaylistRank] = useState(1);
   const [renderedPlaylists, dispatchRenderedPlaylists] = useReducer<
     (arg1: Playlist[], actions: any) => Playlist[]
@@ -29,11 +27,6 @@ const Home: NextPage<{
     setFeaturedPlaylistRank(rank);
   };
 
-  const refreshList = async () => {
-    // const top100 = await getPlaylists(0, 'hi');
-    // dispatchRenderedPlaylists({ type: 'add', playlists: top100 });
-  };
-
   return (
     <>
       <Head>
@@ -42,7 +35,7 @@ const Home: NextPage<{
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="max-w-7xl mx-auto p-3 md:p-6">
+      <main className="max-w-90 mx-auto p-3 md:p-6">
         <div className="pb-14 border-b-2 border-gray-700">
           <h1 className="text-4xl mb-6 font-semibold">
             <span>welcome to </span>
@@ -50,18 +43,12 @@ const Home: NextPage<{
             {spotifyUser !== null && <span>, {spotifyUser.display_name}!</span>}
           </h1>
           <div className="text-2xl">today&apos;s playlist aura: </div>
-          <h2
-            id="aura"
-            className="text-3xl md:text-4xl lg:text-7xl font-bold text-red-400 mb-6"
-          >
+          <h2 id="aura" className="text-3xl md:text-4xl lg:text-7xl font-bold text-red-400 mb-6">
             LUDICROUSLY CAPACIOUS
           </h2>
-          <ActionBox
-            spotifyUser={spotifyUser}
-            submittedPlaylist={submittedPlaylist}
-          />
+          <ActionBox spotifyUser={spotifyUser} submittedPlaylist={submittedPlaylist} />
         </div>
-        <div className="md:flex">
+        <div className="md:flex md:min-h-screen border-b-2 border-black">
           <SubmissionList
             renderedPlaylists={renderedPlaylists}
             featuredPlaylist={featuredPlaylist}
@@ -70,6 +57,7 @@ const Home: NextPage<{
           <FeaturedPlaylistContainer
             featuredPlaylist={featuredPlaylist}
             rank={featuredPlaylistRank}
+            spotifyUser={spotifyUser}
           />
         </div>
       </main>

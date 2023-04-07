@@ -26,6 +26,14 @@ export interface SubmissionListProps {
 export interface FeaturedPlaylistContainerProps {
   featuredPlaylist: Playlist;
   rank: number;
+  spotifyUser: Record<string, string> | null;
+}
+
+export interface FeaturedPlaylistInfoBarProps {
+  playlist: Playlist;
+  rank: number;
+  isLiked: boolean;
+  spotifyUser: Record<string, string> | null;
 }
 
 export interface ActionBoxProps {

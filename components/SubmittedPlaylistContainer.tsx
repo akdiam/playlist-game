@@ -61,10 +61,10 @@ export const SubmittedPlaylistContainer = (props: submittedPlaylistContainerProp
                   {isRemovalLoading && <div>removing submission...</div>}
                   {!isRemovalLoading && (
                     <>
-                      <div>are you sure?</div>{' '}
+                      <div>proceed with removal?</div>{' '}
                       <button
                         onClick={handleRemove}
-                        className="mr-2 mt-1 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-700 py-1 px-3 rounded-md"
+                        className="mr-2 mt-1 border border-red-700 text-red-700 hover:bg-red-500 hover:text-white py-1 px-3 rounded-md"
                       >
                         remove
                       </button>
@@ -81,7 +81,7 @@ export const SubmittedPlaylistContainer = (props: submittedPlaylistContainerProp
               {!isRemovalConfirmationActive && (
                 <button
                   onClick={() => setIsRemovalConfirmationActive(true)}
-                  className="border border-red-500 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-700 py-1 px-3 rounded-md"
+                  className="border border-red-700 text-red-700 hover:bg-red-500 hover:text-white py-1 px-3 rounded-md"
                 >
                   remove submission
                 </button>
