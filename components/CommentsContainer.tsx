@@ -102,7 +102,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
               value={commentInputValue}
               className="flex-grow bg-white text-sm border border-gray-400 rounded-md mr-2 p-1 focus:border-black focus:ring-black focus:outline-none"
             ></input>
-            <button className="disabled text-sm border border-blue-600 text-blue-600 rounded-md px-3 py-1 hover:bg-blue-500 hover:text-white">
+            <button className="text-sm border border-blue-600 text-blue-600 rounded-md px-3 py-1 hover:bg-blue-500 hover:text-white">
               send
             </button>
           </form>

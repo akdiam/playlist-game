@@ -32,7 +32,7 @@ const Home: NextPage<{
     <>
       <Head>
         <title>the playlist game</title>
-        <meta name="description" content="the playlist game" />
+        <meta name="description" content="the playlist forum" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -40,7 +40,7 @@ const Home: NextPage<{
         <div className="pb-14 border-b-2 border-gray-700">
           <h1 className="text-4xl mb-6 font-semibold">
             <span>welcome to </span>
-            <u>the playlist game</u>
+            <u>the playlist forum</u>
             {spotifyUser !== null && <span>, {spotifyUser.display_name}!</span>}
           </h1>
           <div className="text-2xl">today&apos;s playlist aura: </div>

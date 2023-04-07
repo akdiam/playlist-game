@@ -21,7 +21,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
 
   useEffect(() => {
     setIsIframeLoading(true);
-  }, [props.featuredPlaylist.id]);
+  }, [props.featuredPlaylist?.id]);
 
   // dumb as hell hack to make iframe animation work on safari page load
   useEffect(() => {

@@ -7,7 +7,7 @@ export const extractPlaylistId = (playlistUrl: string) => {
   } else {
     return null;
   }
-}
+};
 
 export async function getSpotifyUser(accessToken: string) {
   try {
@@ -26,11 +26,14 @@ export async function getSpotifyUser(accessToken: string) {
 
 export async function getPlaylistInfo(playlistId: string, accessToken: string) {
   try {
-    const response = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}?fields=name,images`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await axios.get(
+      `https://api.spotify.com/v1/playlists/${playlistId}?fields=name,images`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
     return await response.data;
   } catch (error) {
