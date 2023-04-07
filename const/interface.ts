@@ -46,3 +46,18 @@ export interface submittedPlaylistContainerProps {
   setSubmittedPlaylist: Function;
   handleSync: Function;
 }
+
+export interface Comment {
+  id: string;
+  playlist_id: string;
+  round_id: string;
+  user_id: string;
+  time_submitted: string;
+  content: string;
+  display_name: string;
+}
+
+export interface CommentsContainerProps {
+  featuredPlaylist: Playlist;
+  spotifyUser: Record<string, string> | null;
+}

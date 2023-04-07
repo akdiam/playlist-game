@@ -31,7 +31,7 @@ export const ActionBox = (props: ActionBoxProps) => {
           userId: props.spotifyUser?.id ?? '0',
           roundId: 'hi',
           displayName: props.spotifyUser?.display_name ?? '0',
-          id: submittedPlaylist?.id ?? '0',
+          id: submittedPlaylist?.id ?? null,
         }),
       });
       const responseJson: any = await response.json();

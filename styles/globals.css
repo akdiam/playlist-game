@@ -22,9 +22,9 @@ iframe, .placeholder {
 
 .centerSpinner {
   position: absolute;
-  top: 50%;
+  top: 31vh;
   left: 50%;
-  transform: translate(-50%, 400%);
+  transform: translate(-50%, -50%);
 }
 
 .iframe-loading {

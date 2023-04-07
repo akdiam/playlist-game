@@ -2,13 +2,14 @@ import { randomUUID } from 'crypto';
 import { submitPlaylist } from '../../../util/dbUtil';
 import { getPlaylistInfo } from '../../../util/spotify';
 import { Playlist } from '@/const/interface';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
       const playlistInfoFromSpotify = await getPlaylistInfo(
         req.body.playlistId,
-        req.cookies.access_token
+        req.cookies.access_token ?? ''
       );
       const id = req.body.id ? req.body.id : randomUUID();
       const playlistId = req.body.playlistId;

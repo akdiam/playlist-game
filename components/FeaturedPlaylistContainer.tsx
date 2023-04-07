@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FeaturedPlaylistInfoBar } from './FeaturedPlaylistInfoBar';
 import { useEffect, useState } from 'react';
 import { Spinner } from './Spinner';
+import { CommentsContainer } from './CommentsContainer';
 
 export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps) => {
   const [isIframeLoading, setIsIframeLoading] = useState(true);
@@ -78,18 +79,10 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                   {!hasComponentMounted && (
                     <div className="md:w-1/2 lg:w-2/3 placeholder iframe-loading"></div>
                   )}
-                  <div className="flex flex-col justify-between md:w-1/2 lg:w-1/3 invisible md:visible border border-black rounded-md overflow-auto ml-3">
-                    <div className="p-3 italic font-bold border-b border-black">comments</div>
-                    <div className="px-3 text-sm text-gray-400">ahhh, the sound of silence...</div>
-                    <div className="px-3 py-5 border-t border-black">
-                      <form className="flex">
-                        <input className="flex-grow bg-white text-sm border border-gray-400 rounded-md mr-2 p-1 focus:border-black focus:ring-black focus:outline-none"></input>
-                        <button className="disabled text-sm border border-blue-600 text-blue-600 rounded-md px-3 py-1 hover:bg-blue-500 hover:text-white">
-                          send
-                        </button>
-                      </form>
-                    </div>
-                  </div>
+                  <CommentsContainer
+                    featuredPlaylist={props.featuredPlaylist}
+                    spotifyUser={props.spotifyUser}
+                  />
                 </div>
               </motion.div>
             </AnimatePresence>

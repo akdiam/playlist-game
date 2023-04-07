@@ -22,8 +22,6 @@ export async function submitPlaylist(id, playlistId, userId, name, roundId, cove
     [id, playlistId, userId, name, roundId, coverImageSrc]
   );
 
-  console.log(rows);
-
   return rows && rows.length > 0 ? JSON.parse(JSON.stringify(rows[0])) : null;
 }
 
@@ -114,4 +112,30 @@ export async function getSubmittedPlaylist(spotifyUser, roundId) {
   }
 
   return null;
+}
+
+export async function sendComment(content, playlistId, roundId, userId, displayName) {
+  const id = randomUUID();
+
+  const { rows } = await pool.query(
+    `INSERT INTO playlistgame.comments (id, playlist_id, round_id, user_id, time_submitted, content, display_name)
+     VALUES($1, $2, $3, $4, NOW(), $5, $6)
+     RETURNING *;`,
+    [id, playlistId, roundId, userId, content, displayName]
+  );
+
+  return JSON.parse(JSON.stringify(rows[0]));
+}
+
+export async function getComments(playlistId, roundId) {
+  const { rows } = await pool.query(
+    `SELECT * 
+     FROM playlistgame.comments c
+     WHERE c.playlist_id = $1
+     AND c.round_id = $2
+     ORDER BY c.time_submitted ASC;`,
+    [playlistId, roundId]
+  );
+
+  return JSON.parse(JSON.stringify(rows));
 }
