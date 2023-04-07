@@ -12,7 +12,7 @@ export const ActionBox = (props: ActionBoxProps) => {
   const [playlistInputValue, setPlaylistInputValue] = useState('');
 
   const spotifyAuthUrl =
-    'https://accounts.spotify.com/authorize?client_id=28abf050734148e7a3204c9be8368811&response_type=code&redirect_uri=http://localhost:3000/api/callback&scope=user-read-private&';
+    'https://accounts.spotify.com/authorize?client_id=28abf050734148e7a3204c9be8368811&response_type=code&redirect_uri=http://localhost:3000/api/callback&scope=user-read-private,user-read-email';
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -28,10 +28,10 @@ export const ActionBox = (props: ActionBoxProps) => {
           playlistId: submittedPlaylist
             ? submittedPlaylist.playlist_id
             : extractPlaylistId(playlistInputValue),
-          userId: props.spotifyUser?.id,
+          userId: props.spotifyUser?.id ?? '0',
           roundId: 'hi',
-          displayName: props.spotifyUser?.display_name,
-          id: submittedPlaylist?.id,
+          displayName: props.spotifyUser?.display_name ?? '0',
+          id: submittedPlaylist?.id ?? '0',
         }),
       });
       const responseJson: any = await response.json();

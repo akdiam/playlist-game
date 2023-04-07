@@ -18,6 +18,7 @@ const Home: NextPage<{
 }> = ({ playlists, spotifyUser, submittedPlaylist }) => {
   const [featuredPlaylist, setFeaturedPlaylist] = useState(playlists[0] ?? null);
   const [featuredPlaylistRank, setFeaturedPlaylistRank] = useState(1);
+
   const [renderedPlaylists, dispatchRenderedPlaylists] = useReducer<
     (arg1: Playlist[], actions: any) => Playlist[]
   >(renderedPlaylistsReducer, playlists);

@@ -3,14 +3,7 @@ import pool from '../lib/db';
 
 const PAGE_SIZE = 100;
 
-export async function submitPlaylist(
-  id,
-  playlistId,
-  userId,
-  name,
-  roundId,
-  coverImageSrc
-) {
+export async function submitPlaylist(id, playlistId, userId, name, roundId, coverImageSrc) {
   const { rows } = await pool.query(
     `WITH ins AS (
       INSERT INTO playlistgame.playlists (id, playlist_id, user_id, name, submission_date, submission_time, round_id, cover_image_src)
@@ -23,20 +16,20 @@ export async function submitPlaylist(
 
     SELECT p.id, p.playlist_id, p.user_id, ins.name, p.submission_date, p.submission_time, p.round_id, ins.cover_image_src, COUNT(v.id) as votes
       FROM ins
-      JOIN playlistgame.playlists p ON ins.id = p.id
+      LEFT JOIN playlistgame.playlists p ON ins.id = p.id
       LEFT JOIN playlistgame.votes v ON p.id = v.playlist_id
       GROUP BY p.id, ins.name, ins.cover_image_src;`,
     [id, playlistId, userId, name, roundId, coverImageSrc]
   );
+
+  console.log(rows);
 
   return rows && rows.length > 0 ? JSON.parse(JSON.stringify(rows[0])) : null;
 }
 
 export async function removePlaylist(submissionId) {
   try {
-    await pool.query(`DELETE FROM playlistgame.playlists WHERE id = $1;`, [
-      submissionId,
-    ]);
+    await pool.query(`DELETE FROM playlistgame.playlists WHERE id = $1;`, [submissionId]);
     return 200;
   } catch (e) {
     return 500;

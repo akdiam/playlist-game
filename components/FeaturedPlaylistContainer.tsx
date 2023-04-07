@@ -20,6 +20,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
           {props.featuredPlaylist && (
             <AnimatePresence mode="popLayout">
               <motion.div
+                style={{ willChange: 'opacity, transform' }}
                 className="md:absolute inset-0 w-full"
                 key={props.featuredPlaylist.playlist_id}
                 initial="hidden"

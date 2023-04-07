@@ -30,6 +30,8 @@ export default async (req, res) => {
     res.end();
   } catch (error) {
     console.error('Error in /api/auth/login:', error.response?.data || error.message || error);
-    res.status(500).json({ error: 'Login failed', details: error.response?.data || error.message || error });
+    res
+      .status(500)
+      .json({ error: 'Login failed', details: error.response?.data || error.message || error });
   }
 };
