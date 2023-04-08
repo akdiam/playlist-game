@@ -26,7 +26,7 @@ iframe, .commentsContainer {
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 
 *::-webkit-scrollbar-track {
@@ -43,7 +43,7 @@ iframe, .commentsContainer {
   position: absolute;
   top: 31vh;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(700%, -50%);
 }
 
 .iframe-loading {

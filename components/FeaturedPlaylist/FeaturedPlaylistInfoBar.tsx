@@ -15,7 +15,7 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
             <a href={spotifyProfileUrl + props.playlist.user_id}>{props.playlist.display_name}</a>
           </i>
           &nbsp;|&nbsp;
-          <i>{props.playlist.votes} votes</i>
+          <i>{props.playlist.votes} likes</i>
         </div>
       </div>
       <div className="col-span-1 max-w-36 my-auto pl-3">

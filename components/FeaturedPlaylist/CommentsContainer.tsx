@@ -68,8 +68,8 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
   }, [props.featuredPlaylist.id]);
 
   return (
-    <div className="commentsContainer flex flex-col justify-between md:w-1/2 lg:w-1/3 invisible md:visible border border-black rounded-md ml-3">
-      <div className="p-3 italic font-bold border-b border-black">comments</div>
+    <div className="commentsContainer flex flex-col justify-between md:w-1/2 lg:w-1/3 invisible md:visible border border-black rounded-xl mr-3">
+      <div className="p-3 italic font-bold border-b border-black shadow-sm">comments</div>
       {areCommentsLoading && (
         <div className="mx-auto">
           <Spinner />
@@ -108,7 +108,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
           </form>
         )}
         {!props.spotifyUser && (
-          <div className="text-sm text-gray-400">please log in to comment</div>
+          <div className="text-sm text-gray-400">please log in to comment.</div>
         )}
       </div>
     </div>

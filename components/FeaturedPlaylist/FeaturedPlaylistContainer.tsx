@@ -29,7 +29,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
   }, []);
 
   return (
-    <div className="w-full md:w-2/3 pl-6 mt-6">
+    <div className="w-full md:w-2/3 pr-6 mt-6">
       <div className="sticky top-6 z-10 bg-white">
         <div className="md:relative">
           {props.featuredPlaylist && (
@@ -51,6 +51,10 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                   spotifyUser={props.spotifyUser}
                 />
                 <div className="md:flex md:flex-row">
+                  <CommentsContainer
+                    featuredPlaylist={props.featuredPlaylist}
+                    spotifyUser={props.spotifyUser}
+                  />
                   {isIframeLoading && (
                     <div
                       className={`${
@@ -79,10 +83,6 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                   {!hasComponentMounted && (
                     <div className="md:w-1/2 lg:w-2/3 placeholder iframe-loading"></div>
                   )}
-                  <CommentsContainer
-                    featuredPlaylist={props.featuredPlaylist}
-                    spotifyUser={props.spotifyUser}
-                  />
                 </div>
               </motion.div>
             </AnimatePresence>

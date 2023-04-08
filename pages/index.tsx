@@ -50,15 +50,15 @@ const Home: NextPage<{
           <ActionBox spotifyUser={user} submittedPlaylist={submittedPlaylist} />
         </div>
         <div className="md:flex md:min-h-screen border-b-2 border-black">
-          <SubmissionList
-            renderedPlaylists={renderedPlaylists}
-            featuredPlaylist={featuredPlaylist}
-            handleClick={handleClick}
-          />
           <FeaturedPlaylistContainer
             featuredPlaylist={featuredPlaylist}
             rank={featuredPlaylistRank}
             spotifyUser={user}
+          />
+          <SubmissionList
+            renderedPlaylists={renderedPlaylists}
+            featuredPlaylist={featuredPlaylist}
+            handleClick={handleClick}
           />
         </div>
       </main>
