@@ -1,3 +1,8 @@
+export interface User {
+  id: string;
+  display_name: string;
+}
+
 export interface Playlist {
   id: string;
   playlist_id: string;
@@ -26,18 +31,18 @@ export interface SubmissionListProps {
 export interface FeaturedPlaylistContainerProps {
   featuredPlaylist: Playlist;
   rank: number;
-  spotifyUser: Record<string, string> | null;
+  spotifyUser: User | null;
 }
 
 export interface FeaturedPlaylistInfoBarProps {
   playlist: Playlist;
   rank: number;
   isLiked: boolean;
-  spotifyUser: Record<string, string> | null;
+  spotifyUser: User | null;
 }
 
 export interface ActionBoxProps {
-  spotifyUser: Record<string, string> | null;
+  spotifyUser: User | null;
   submittedPlaylist: Playlist | null;
 }
 
@@ -59,5 +64,5 @@ export interface Comment {
 
 export interface CommentsContainerProps {
   featuredPlaylist: Playlist;
-  spotifyUser: Record<string, string> | null;
+  spotifyUser: User | null;
 }

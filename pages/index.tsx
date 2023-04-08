@@ -1,21 +1,21 @@
 import Head from 'next/head';
 import { NextPage } from 'next';
 import { useReducer, useState } from 'react';
-import cookie from 'cookie';
+import { getSession } from 'next-auth/react';
 
-import { getSpotifyUser } from '../util/spotify';
 import { getPlaylists, getSubmittedPlaylist } from '../util/dbUtil';
-import { Playlist } from '@/const/interface';
+import { Playlist, User } from '@/const/interface';
 import { renderedPlaylistsReducer } from '@/lib/reducers';
-import { SubmissionList } from '@/components/SubmissionList';
-import { FeaturedPlaylistContainer } from '@/components/FeaturedPlaylistContainer';
-import { ActionBox } from '@/components/ActionBox';
+import { SubmissionList } from '@/components/SubmissionList/SubmissionList';
+import { FeaturedPlaylistContainer } from '@/components/FeaturedPlaylist/FeaturedPlaylistContainer';
+import { ActionBox } from '@/components/ActionBox/ActionBox';
+import { Session } from 'next-auth';
 
 const Home: NextPage<{
   playlists: Playlist[];
-  spotifyUser: Record<string, string> | null;
+  user: User | null;
   submittedPlaylist: Playlist | null;
-}> = ({ playlists, spotifyUser, submittedPlaylist }) => {
+}> = ({ playlists, user, submittedPlaylist }) => {
   const [featuredPlaylist, setFeaturedPlaylist] = useState(playlists[0] ?? null);
   const [featuredPlaylistRank, setFeaturedPlaylistRank] = useState(1);
 
@@ -41,13 +41,13 @@ const Home: NextPage<{
           <h1 className="text-4xl mb-6 font-semibold">
             <span>welcome to </span>
             <u>the playlist forum</u>
-            {spotifyUser !== null && <span>, {spotifyUser.display_name}!</span>}
+            {user !== null && <span>, {user.display_name}!</span>}
           </h1>
           <div className="text-2xl">today&apos;s playlist aura: </div>
           <h2 id="aura" className="text-3xl md:text-4xl lg:text-7xl font-bold text-red-400 mb-6">
             LUDICROUSLY CAPACIOUS
           </h2>
-          <ActionBox spotifyUser={spotifyUser} submittedPlaylist={submittedPlaylist} />
+          <ActionBox spotifyUser={user} submittedPlaylist={submittedPlaylist} />
         </div>
         <div className="md:flex md:min-h-screen border-b-2 border-black">
           <SubmissionList
@@ -58,7 +58,7 @@ const Home: NextPage<{
           <FeaturedPlaylistContainer
             featuredPlaylist={featuredPlaylist}
             rank={featuredPlaylistRank}
-            spotifyUser={spotifyUser}
+            spotifyUser={user}
           />
         </div>
       </main>
@@ -68,25 +68,31 @@ const Home: NextPage<{
 
 export async function getServerSideProps(context: Record<string, any>) {
   const roundId = 'hi';
-  const cookies = cookie.parse(context.req.headers.cookie || '');
-  const accessToken = cookies.access_token;
-  const spotifyUser = await getSpotifyUser(accessToken).catch((e) => {
-    return null;
-  });
+  const session: Session | null = await getSession(context);
 
   let submittedPlaylist: Playlist | null = null;
-  if (spotifyUser) {
-    const submittedPlaylists = await getSubmittedPlaylist(spotifyUser, roundId);
-    if (submittedPlaylists && submittedPlaylists.length > 0) {
-      submittedPlaylist = submittedPlaylists[0];
+  let user: User | null = null;
+
+  if (session && session.user?.name) {
+    user = {
+      id: session.user.id,
+      display_name: session.user.name,
+    };
+
+    if (session) {
+      const submittedPlaylists = await getSubmittedPlaylist(user.id, roundId);
+      if (submittedPlaylists && submittedPlaylists.length > 0) {
+        submittedPlaylist = submittedPlaylists[0];
+      }
     }
   }
+
   const playlists = await getPlaylists(0, roundId);
 
   return {
     props: {
       playlists,
-      spotifyUser,
+      user,
       submittedPlaylist,
     },
   };

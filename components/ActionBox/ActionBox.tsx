@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { signIn, signOut } from 'next-auth/react';
 
 import { ActionBoxProps, Playlist } from '@/const/interface';
 import { extractPlaylistId } from '@/util/spotify';
@@ -10,9 +11,6 @@ export const ActionBox = (props: ActionBoxProps) => {
   );
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [playlistInputValue, setPlaylistInputValue] = useState('');
-
-  const spotifyAuthUrl =
-    'https://accounts.spotify.com/authorize?client_id=28abf050734148e7a3204c9be8368811&response_type=code&redirect_uri=http://localhost:3000/api/callback&scope=user-read-private,user-read-email';
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -52,11 +50,12 @@ export const ActionBox = (props: ActionBoxProps) => {
       {props.spotifyUser === null && (
         <>
           <h2 className="text-2xl mb-2">to participate:</h2>
-          <a href={spotifyAuthUrl}>
-            <button className="border border-gray-400 rounded-md px-3 py-1">
-              Login with Spotify
-            </button>
-          </a>
+          <button
+            onClick={() => signIn('spotify')}
+            className="border border-gray-400 rounded-md px-3 py-1"
+          >
+            Login with Spotify
+          </button>
         </>
       )}
       {props.spotifyUser !== null && (

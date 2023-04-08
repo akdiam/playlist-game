@@ -3,20 +3,29 @@ import { submitPlaylist } from '../../../util/dbUtil';
 import { getPlaylistInfo } from '../../../util/spotify';
 import { Playlist } from '@/const/interface';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getServerSession(req, res, authOptions);
+  console.log(req.body);
+
+  if (!session) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
   if (req.method === 'POST') {
     try {
       const playlistInfoFromSpotify = await getPlaylistInfo(
         req.body.playlistId,
-        req.cookies.access_token ?? ''
+        session.accessToken ?? ''
       );
       const id = req.body.id ? req.body.id : randomUUID();
       const playlistId = req.body.playlistId;
-      const userId = req.body.userId;
+      const userId = session.user.id;
       const name = playlistInfoFromSpotify.name;
       const roundId = req.body.roundId;
-      const displayName = req.body.displayName;
       const coverImageSrc = playlistInfoFromSpotify.images[0].url;
 
       let submittedPlaylist: Playlist = await submitPlaylist(
@@ -27,7 +36,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         roundId,
         coverImageSrc
       );
-      submittedPlaylist.display_name = displayName;
+      if (session.user.name) {
+        submittedPlaylist.display_name = session.user.name;
+      }
       res.status(200).json({ submittedPlaylist });
     } catch (error: any) {
       console.error(error.message);

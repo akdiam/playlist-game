@@ -41,7 +41,7 @@ export async function getPlaylists(page, roundId) {
       p.id,
       p.playlist_id,
       p.user_id,
-      u.display_name,
+      u.name AS display_name,
       p.name,
       p.submission_date,
       p.submission_time,
@@ -49,7 +49,7 @@ export async function getPlaylists(page, roundId) {
       COUNT(v.playlist_id) as votes
     FROM
       playlistgame.playlists p
-      JOIN playlistgame.users u ON p.user_id = u.id
+      JOIN auth."User" u ON p.user_id = u.id
       LEFT JOIN playlistgame.votes v ON p.playlist_id = v.playlist_id
     WHERE
       p.round_id = '${roundId}'
@@ -57,7 +57,7 @@ export async function getPlaylists(page, roundId) {
       p.id,
       p.playlist_id,
       p.user_id,
-      u.display_name,
+      u.name,
       p.name,
       p.submission_date,
       p.submission_time,
@@ -74,32 +74,21 @@ export async function getPlaylists(page, roundId) {
 
 /**
  * Returns user's submitted playlist for roundId, if it exists.
- * If user doesn't exist in DB, create user.
  * @param {Record<string, any>} spotifyUser
  * @param {string} roundId
  * @returns {Playlist | null}
  */
-export async function getSubmittedPlaylist(spotifyUser, roundId) {
+export async function getSubmittedPlaylist(userId, roundId) {
   try {
     const { rows } = await pool.query(
-      `WITH user_check AS (
-        INSERT INTO playlistgame.users (id, display_name)
-        SELECT $1, $2
-        WHERE NOT EXISTS (
-          SELECT 1
-          FROM playlistgame.users u
-          WHERE u.id = $1
-        )
-      )
-
-      SELECT *
+      `SELECT *
       FROM playlistgame.playlists p
       WHERE p.user_id = $1
-      AND p.round_id = $3
+      AND p.round_id = $2
       ORDER BY
         p.submission_date ASC,
         p.submission_time ASC;`,
-      [spotifyUser.id, spotifyUser.display_name, roundId]
+      [userId, roundId]
     );
 
     if (rows.length > 0) {

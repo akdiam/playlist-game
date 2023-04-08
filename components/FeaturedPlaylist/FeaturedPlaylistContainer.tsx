@@ -2,7 +2,7 @@ import { FeaturedPlaylistContainerProps } from '@/const/interface';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FeaturedPlaylistInfoBar } from './FeaturedPlaylistInfoBar';
 import { useEffect, useState } from 'react';
-import { Spinner } from './Spinner';
+import { Spinner } from '../Spinner';
 import { CommentsContainer } from './CommentsContainer';
 
 export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps) => {
@@ -37,7 +37,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
               <motion.div
                 style={{ willChange: 'opacity, transform' }}
                 className="md:absolute inset-0 w-full"
-                key={props.featuredPlaylist.playlist_id}
+                key={props.featuredPlaylist.id}
                 initial="hidden"
                 animate="visible"
                 exit="hidden"

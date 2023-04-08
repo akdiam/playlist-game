@@ -1,6 +1,17 @@
-import { removePlaylist } from '@/util/dbUtil';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth';
 
-export default async function handler(req: any, res: any) {
+import { removePlaylist } from '@/util/dbUtil';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
   if (req.method === 'POST') {
     const submissionId = req.body.submissionId;
     try {
