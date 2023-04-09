@@ -44,7 +44,6 @@ export const authOptions: NextAuthOptions = {
             });
 
             const tokens: TokenSet = await response.json();
-            console.log(tokens);
             if (!response.ok) throw tokens;
 
             await prisma.account.update({

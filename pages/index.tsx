@@ -18,20 +18,20 @@ const Home: NextPage<{
 }> = ({ playlists, user, submittedPlaylist }) => {
   const [featuredPlaylist, setFeaturedPlaylist] = useState(playlists[0] ?? null);
   const [featuredPlaylistRank, setFeaturedPlaylistRank] = useState(1);
-
-  const [renderedPlaylists, dispatchRenderedPlaylists] = useReducer<
-    (arg1: Playlist[], actions: any) => Playlist[]
-  >(renderedPlaylistsReducer, playlists);
+  const [renderedPlaylists, dispatch] = useReducer<(arg1: Playlist[], actions: any) => Playlist[]>(
+    renderedPlaylistsReducer,
+    playlists
+  );
 
   const handleClick = (playlist: Playlist, rank: number) => {
-    playlist.playlist_id && setFeaturedPlaylist(playlist);
+    playlist.spotify_id && setFeaturedPlaylist(playlist);
     setFeaturedPlaylistRank(rank);
   };
 
   return (
     <>
       <Head>
-        <title>the playlist game</title>
+        <title>playlist forum</title>
         <meta name="description" content="the playlist forum" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -40,20 +40,20 @@ const Home: NextPage<{
         <div className="pb-14 border-b-2 border-gray-700">
           <h1 className="text-4xl mb-6 font-semibold">
             <span>welcome to </span>
-            <u>the playlist forum</u>
+            <u>playlist forum</u>
             {user !== null && <span>, {user.display_name}!</span>}
           </h1>
           <div className="text-2xl">today&apos;s playlist aura: </div>
           <h2 id="aura" className="text-3xl md:text-4xl lg:text-7xl font-bold text-red-400 mb-6">
             LUDICROUSLY CAPACIOUS
           </h2>
-          <ActionBox spotifyUser={user} submittedPlaylist={submittedPlaylist} />
+          <ActionBox user={user} submittedPlaylist={submittedPlaylist} />
         </div>
         <div className="md:flex md:min-h-screen border-b-2 border-black">
           <FeaturedPlaylistContainer
             featuredPlaylist={featuredPlaylist}
             rank={featuredPlaylistRank}
-            spotifyUser={user}
+            user={user}
           />
           <SubmissionList
             renderedPlaylists={renderedPlaylists}
@@ -87,7 +87,7 @@ export async function getServerSideProps(context: Record<string, any>) {
     }
   }
 
-  const playlists = await getPlaylists(0, roundId);
+  const playlists = await getPlaylists(0, roundId, user?.id ?? '');
 
   return {
     props: {

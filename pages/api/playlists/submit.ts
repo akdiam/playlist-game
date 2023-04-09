@@ -17,11 +17,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     try {
       const playlistInfoFromSpotify = await getPlaylistInfo(
-        req.body.playlistId,
+        req.body.spotifyId,
         session.accessToken ?? ''
       );
       const id = req.body.id ? req.body.id : randomUUID();
-      const playlistId = req.body.playlistId;
+      const spotifyId = req.body.spotifyId;
       const userId = session.user.id;
       const name = playlistInfoFromSpotify.name;
       const roundId = req.body.roundId;
@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       let submittedPlaylist: Playlist = await submitPlaylist(
         id,
-        playlistId,
+        spotifyId,
         userId,
         name,
         roundId,

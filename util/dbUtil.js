@@ -3,7 +3,7 @@ import pool from '../lib/db';
 
 const PAGE_SIZE = 100;
 
-export async function submitPlaylist(id, playlistId, userId, name, roundId, coverImageSrc) {
+export async function submitPlaylist(id, spotifyId, userId, name, roundId, coverImageSrc) {
   const { rows } = await pool.query(
     `WITH ins AS (
       INSERT INTO playlistgame.playlists (id, playlist_id, user_id, name, submission_date, submission_time, round_id, cover_image_src)
@@ -14,12 +14,12 @@ export async function submitPlaylist(id, playlistId, userId, name, roundId, cove
       RETURNING id, name, cover_image_src
     )
 
-    SELECT p.id, p.playlist_id, p.user_id, ins.name, p.submission_date, p.submission_time, p.round_id, ins.cover_image_src, COUNT(v.id) as votes
+    SELECT p.id, p.spotify_id, p.user_id, ins.name, p.submission_date, p.submission_time, p.round_id, ins.cover_image_src, COUNT(l.id) as likes
       FROM ins
       LEFT JOIN playlistgame.playlists p ON ins.id = p.id
-      LEFT JOIN playlistgame.votes v ON p.id = v.playlist_id
+      LEFT JOIN playlistgame.likes l ON p.id = l.playlist_id
       GROUP BY p.id, ins.name, ins.cover_image_src;`,
-    [id, playlistId, userId, name, roundId, coverImageSrc]
+    [id, spotifyId, userId, name, roundId, coverImageSrc]
   );
 
   return rows && rows.length > 0 ? JSON.parse(JSON.stringify(rows[0])) : null;
@@ -35,27 +35,32 @@ export async function removePlaylist(submissionId) {
 }
 
 // Get page n of round i
-export async function getPlaylists(page, roundId) {
+export async function getPlaylists(page, roundId, userId) {
   const { rows } = await pool.query(
     `SELECT
       p.id,
-      p.playlist_id,
+      p.spotify_id,
       p.user_id,
       u.name AS display_name,
       p.name,
       p.submission_date,
       p.submission_time,
       p.round_id,
-      COUNT(v.playlist_id) as votes
+      COUNT(l.playlist_id) as likes,
+      CASE
+        WHEN COUNT(l2.playlist_id) > 0 THEN true
+        ELSE false
+      END AS is_liked
     FROM
       playlistgame.playlists p
       JOIN auth."User" u ON p.user_id = u.id
-      LEFT JOIN playlistgame.votes v ON p.playlist_id = v.playlist_id
+      LEFT JOIN playlistgame.likes l ON p.id = l.playlist_id
+      LEFT JOIN playlistgame.likes l2 ON p.id = l2.playlist_id AND l2.round_id = $1 AND l2.user_id = $2
     WHERE
-      p.round_id = '${roundId}'
+      p.round_id = $1
     GROUP BY
       p.id,
-      p.playlist_id,
+      p.spotify_id,
       p.user_id,
       u.name,
       p.name,
@@ -63,10 +68,11 @@ export async function getPlaylists(page, roundId) {
       p.submission_time,
       p.round_id
     ORDER BY
-      COUNT(v.playlist_id) DESC,
+      COUNT(l.playlist_id) DESC,
       p.submission_date DESC,
       p.submission_time DESC
-    LIMIT ${PAGE_SIZE} OFFSET ${page * PAGE_SIZE};`
+    LIMIT ${PAGE_SIZE} OFFSET ${page * PAGE_SIZE};`,
+    [roundId, userId]
   );
 
   return JSON.parse(JSON.stringify(rows));
@@ -74,7 +80,7 @@ export async function getPlaylists(page, roundId) {
 
 /**
  * Returns user's submitted playlist for roundId, if it exists.
- * @param {Record<string, any>} spotifyUser
+ * @param {Record<string, any>} user
  * @param {string} roundId
  * @returns {Playlist | null}
  */
@@ -125,4 +131,30 @@ export async function getComments(playlistId, roundId) {
   );
 
   return JSON.parse(JSON.stringify(rows));
+}
+
+export async function addLike(playlistId, roundId, userId) {
+  const id = randomUUID();
+  await pool.query(
+    `INSERT INTO playlistgame.likes (id, playlist_id, round_id, user_id)
+     SELECT $1, $2, $3, $4
+     WHERE NOT EXISTS (
+      SELECT 1
+      FROM playlistgame.likes
+      WHERE playlist_id = $2
+        AND round_id = $3
+        AND user_id = $4
+     );`,
+    [id, playlistId, roundId, userId]
+  );
+}
+
+export async function removeLike(playlistId, roundId, userId) {
+  await pool.query(
+    `DELETE from playlistgame.likes
+     WHERE playlist_id = $1
+       AND round_id = $2
+       AND user_id = $3;`,
+    [playlistId, roundId, userId]
+  );
 }

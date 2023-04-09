@@ -5,15 +5,16 @@ export interface User {
 
 export interface Playlist {
   id: string;
-  playlist_id: string;
+  spotify_id: string;
   user_id: string;
   display_name: string;
   name: string;
   submission_date: string;
   submission_time: string;
   round_id: string;
-  votes: string;
+  likes: string;
   cover_image_src: string;
+  is_liked?: boolean;
 }
 
 export interface PlaylistEntryProps {
@@ -31,18 +32,18 @@ export interface SubmissionListProps {
 export interface FeaturedPlaylistContainerProps {
   featuredPlaylist: Playlist;
   rank: number;
-  spotifyUser: User | null;
+  user: User | null;
 }
 
 export interface FeaturedPlaylistInfoBarProps {
   playlist: Playlist;
   rank: number;
   isLiked: boolean;
-  spotifyUser: User | null;
+  user: User | null;
 }
 
 export interface ActionBoxProps {
-  spotifyUser: User | null;
+  user: User | null;
   submittedPlaylist: Playlist | null;
 }
 
@@ -64,5 +65,5 @@ export interface Comment {
 
 export interface CommentsContainerProps {
   featuredPlaylist: Playlist;
-  spotifyUser: User | null;
+  user: User | null;
 }

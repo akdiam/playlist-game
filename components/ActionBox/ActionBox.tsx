@@ -23,12 +23,12 @@ export const ActionBox = (props: ActionBoxProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          playlistId: submittedPlaylist
-            ? submittedPlaylist.playlist_id
+          spotifyId: submittedPlaylist
+            ? submittedPlaylist.spotify_id
             : extractPlaylistId(playlistInputValue),
-          userId: props.spotifyUser?.id ?? '0',
+          userId: props.user?.id ?? '0',
           roundId: 'hi',
-          displayName: props.spotifyUser?.display_name ?? '0',
+          displayName: props.user?.display_name ?? '0',
           id: submittedPlaylist?.id ?? null,
         }),
       });
@@ -47,7 +47,7 @@ export const ActionBox = (props: ActionBoxProps) => {
 
   return (
     <>
-      {props.spotifyUser === null && (
+      {props.user === null && (
         <>
           <h2 className="text-2xl mb-2">to participate:</h2>
           <button
@@ -58,7 +58,7 @@ export const ActionBox = (props: ActionBoxProps) => {
           </button>
         </>
       )}
-      {props.spotifyUser !== null && (
+      {props.user !== null && (
         <>
           {submittedPlaylist && (
             <SubmittedPlaylistContainer

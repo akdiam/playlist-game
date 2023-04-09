@@ -6,7 +6,7 @@ export const PlaylistEntry = (props: PlaylistEntryProps) => {
       <div className="col-span-2 max-w-24 grid-rows-2">
         <div className="row-span-1 text-xl mb-1">{props.rank}.</div>
         <div className="row-span-1 text-xs font-thin">
-          <i>{props.playlist.votes} likes</i>
+          <i>{props.playlist.likes} likes</i>
         </div>
       </div>
       <div className="col-span-9 ml-2 flex flex-col w-auto grid-rows-2">

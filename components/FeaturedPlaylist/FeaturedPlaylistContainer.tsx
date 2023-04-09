@@ -8,6 +8,7 @@ import { CommentsContainer } from './CommentsContainer';
 export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps) => {
   const [isIframeLoading, setIsIframeLoading] = useState(true);
   const [hasComponentMounted, setHasComponentMounted] = useState(false);
+  const [isLikedByUser, setIsLikedByUser] = useState();
 
   const iframeVariants = {
     hidden: { opacity: 0, scale: 0.95 },
@@ -48,13 +49,10 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                   playlist={props.featuredPlaylist}
                   rank={props.rank}
                   isLiked={false}
-                  spotifyUser={props.spotifyUser}
+                  user={props.user}
                 />
                 <div className="md:flex md:flex-row">
-                  <CommentsContainer
-                    featuredPlaylist={props.featuredPlaylist}
-                    spotifyUser={props.spotifyUser}
-                  />
+                  <CommentsContainer featuredPlaylist={props.featuredPlaylist} user={props.user} />
                   {isIframeLoading && (
                     <div
                       className={`${
@@ -71,7 +69,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                       className={`${
                         isIframeLoading ? 'iframe-loading' : 'iframe-visible'
                       } md:w-1/2 lg:w-2/3`}
-                      src={`https://open.spotify.com/embed/playlist/${props.featuredPlaylist.playlist_id}`}
+                      src={`https://open.spotify.com/embed/playlist/${props.featuredPlaylist.spotify_id}`}
                       width="100%"
                       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                       loading="lazy"

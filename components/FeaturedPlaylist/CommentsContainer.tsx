@@ -8,7 +8,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentInputValue, setCommentInputValue] = useState('');
 
-  const spotifyUserUrl = 'https://open.spotify.com/user/';
+  const userUrl = 'https://open.spotify.com/user/';
 
   const loadComments = async () => {
     setAreCommentsLoading(true);
@@ -44,8 +44,8 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
           content: commentInputValue,
           playlistId: props.featuredPlaylist.id,
           roundId: props.featuredPlaylist.round_id,
-          userId: props.spotifyUser?.id,
-          displayName: props.spotifyUser?.display_name,
+          userId: props.user?.id,
+          displayName: props.user?.display_name,
         }),
       });
 
@@ -84,7 +84,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
             <div className="overflowContainer p-3 flex-grow overflow-auto">
               {comments.map((comment: Comment, _) => (
                 <>
-                  <a href={spotifyUserUrl + comment.user_id} className="pb-1 text-sm font-bold">
+                  <a href={userUrl + comment.user_id} className="pb-1 text-sm font-bold">
                     {comment.display_name}
                   </a>
                   <div className="pb-2 text-sm break-all">{comment.content}</div>
@@ -95,7 +95,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
         </>
       )}
       <div className="px-3 py-5 border-t border-black">
-        {props.spotifyUser && (
+        {props.user && (
           <form onSubmit={sendComment} className="flex">
             <input
               onChange={handleInputChange}
@@ -107,9 +107,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
             </button>
           </form>
         )}
-        {!props.spotifyUser && (
-          <div className="text-sm text-gray-400">please log in to comment.</div>
-        )}
+        {!props.user && <div className="text-sm text-gray-400">please log in to comment.</div>}
       </div>
     </div>
   );
