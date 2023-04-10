@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 import { Spinner } from '../Spinner';
@@ -7,6 +8,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
   const [areCommentsLoading, setAreCommentsLoading] = useState(true);
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentInputValue, setCommentInputValue] = useState('');
+  const [canSendComment, setCanSendComment] = useState(false);
 
   const userUrl = 'https://open.spotify.com/user/';
 
@@ -53,6 +55,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
       if (response.ok) {
         setComments([...comments, sentComment]);
         setCommentInputValue('');
+        setCanSendComment(false);
       }
     } catch (error: any) {
       console.error(error);
@@ -60,6 +63,11 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
   };
 
   const handleInputChange = (event: any) => {
+    if (event.target.value.length > 0) {
+      setCanSendComment(true);
+    } else {
+      setCanSendComment(false);
+    }
     setCommentInputValue(event.target.value);
   };
 
@@ -68,7 +76,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
   }, [props.featuredPlaylist.id]);
 
   return (
-    <div className="commentsContainer flex flex-col justify-between md:w-1/2 lg:w-1/3 invisible md:visible border border-black rounded-xl mr-3">
+    <div className="invisible lg:visible commentsContainer flex flex-col justify-between md:w-1/2 lg:w-1/3 invisible md:visible border border-black rounded-xl mr-3">
       <div className="p-3 italic font-bold border-b border-black shadow-sm">comments</div>
       {areCommentsLoading && (
         <div className="mx-auto">
@@ -100,10 +108,15 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
             <input
               onChange={handleInputChange}
               value={commentInputValue}
-              className="flex-grow bg-white text-sm border border-gray-400 rounded-md mr-2 p-1 focus:border-black focus:ring-black focus:outline-none"
+              className="flex-grow bg-white text-sm border border-gray-400 rounded-md p-1 focus:border-black focus:ring-black focus:outline-none"
             ></input>
-            <button className="text-sm border border-blue-600 text-blue-600 rounded-md px-3 py-1 hover:bg-blue-500 hover:text-white">
-              send
+            <button disabled={!canSendComment} className="rounded-md pl-3 hover:text-white">
+              <Image
+                src={canSendComment ? 'send_active.svg' : 'send_inactive.svg'}
+                alt="send comment"
+                height={30}
+                width={30}
+              />
             </button>
           </form>
         )}
