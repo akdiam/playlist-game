@@ -41,7 +41,7 @@ export const SubmittedPlaylistContainer = (props: submittedPlaylistContainerProp
     <>
       <div className="text-2xl mb-3">your submission:</div>
       <div className="w-full md:w-1/2 lg:w-1/3 flex p-3 border border-black text-black rounded-xl shadow-sm">
-        <a href={spotifyPlaylistUrl + props.submittedPlaylist.playlist_id}>
+        <a href={spotifyPlaylistUrl + props.submittedPlaylist.spotify_id}>
           <Image
             className="rounded-md object-cover border border-black"
             src={props.submittedPlaylist.cover_image_src}
@@ -81,9 +81,9 @@ export const SubmittedPlaylistContainer = (props: submittedPlaylistContainerProp
               {!isRemovalConfirmationActive && (
                 <button
                   onClick={() => setIsRemovalConfirmationActive(true)}
-                  className="border border-red-700 text-red-700 hover:bg-red-500 hover:text-white py-1 px-3 rounded-md"
+                  className="text-red-700 border border-gray-400 hover:bg-gray-100 hover:text-white py-1 px-3 rounded-md"
                 >
-                  remove submission
+                  <Image src="trash.svg" alt="remove submission" width={18} height={20} />
                 </button>
               )}
             </div>

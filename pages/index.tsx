@@ -44,7 +44,7 @@ const Home: NextPage<{
             {user !== null && <span>, {user.display_name}!</span>}
           </h1>
           <div className="text-2xl">today&apos;s playlist aura: </div>
-          <h2 id="aura" className="text-3xl md:text-4xl lg:text-7xl font-bold text-red-400 mb-6">
+          <h2 id="aura" className="text-3xl md:text-4xl lg:text-7xl font-bold aura mb-6">
             LUDICROUSLY CAPACIOUS
           </h2>
           <ActionBox user={user} submittedPlaylist={submittedPlaylist} />
@@ -54,6 +54,8 @@ const Home: NextPage<{
             featuredPlaylist={featuredPlaylist}
             rank={featuredPlaylistRank}
             user={user}
+            dispatch={dispatch}
+            setFeaturedPlaylist={setFeaturedPlaylist}
           />
           <SubmissionList
             renderedPlaylists={renderedPlaylists}

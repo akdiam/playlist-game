@@ -14,7 +14,7 @@ export interface Playlist {
   round_id: string;
   likes: string;
   cover_image_src: string;
-  is_liked?: boolean;
+  is_liked: boolean;
 }
 
 export interface PlaylistEntryProps {
@@ -33,13 +33,16 @@ export interface FeaturedPlaylistContainerProps {
   featuredPlaylist: Playlist;
   rank: number;
   user: User | null;
+  dispatch: Function;
+  setFeaturedPlaylist: Function;
 }
 
 export interface FeaturedPlaylistInfoBarProps {
   playlist: Playlist;
   rank: number;
-  isLiked: boolean;
   user: User | null;
+  dispatch: Function;
+  setFeaturedPlaylist: Function;
 }
 
 export interface ActionBoxProps {

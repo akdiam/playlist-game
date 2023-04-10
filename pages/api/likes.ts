@@ -23,8 +23,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } else if (req.method === 'DELETE') {
     try {
-      const { playlistId, roundId } = req.query;
-      await removeLike(playlistId, roundId);
+      const { playlistId, roundId, userId } = req.query;
+      await removeLike(playlistId, roundId, userId);
       res.status(200).end();
     } catch (error: any) {
       console.error('error fetching likes from db', error.message);

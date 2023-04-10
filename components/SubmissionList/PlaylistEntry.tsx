@@ -1,8 +1,10 @@
+import Image from 'next/image';
+
 import { PlaylistEntryProps } from '@/const/interface';
 
 export const PlaylistEntry = (props: PlaylistEntryProps) => {
   return (
-    <div className="grid grid-cols-12 w-full py-3 pl-3 items-start">
+    <div className="grid grid-cols-12 w-full py-3 px-3 items-start">
       <div className="col-span-2 max-w-24 grid-rows-2">
         <div className="row-span-1 text-xl mb-1">{props.rank}.</div>
         <div className="row-span-1 text-xs font-thin">
@@ -18,7 +20,11 @@ export const PlaylistEntry = (props: PlaylistEntryProps) => {
           <i>{`submitted by ${props.playlist.display_name} at ${props.playlist.submission_time} UTC`}</i>
         </div>
       </div>
-      <div className="col-span-1 max-w-24">h</div>
+      <div className="col-span-1 max-w-24 place-self-center">
+        {props.playlist.is_liked && (
+          <Image src="like_filled.svg" alt="like submission" width={15} height={10} />
+        )}
+      </div>
     </div>
   );
 };

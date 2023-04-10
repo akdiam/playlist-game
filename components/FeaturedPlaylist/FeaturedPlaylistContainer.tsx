@@ -48,8 +48,9 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                 <FeaturedPlaylistInfoBar
                   playlist={props.featuredPlaylist}
                   rank={props.rank}
-                  isLiked={false}
                   user={props.user}
+                  dispatch={props.dispatch}
+                  setFeaturedPlaylist={props.setFeaturedPlaylist}
                 />
                 <div className="md:flex md:flex-row">
                   <CommentsContainer featuredPlaylist={props.featuredPlaylist} user={props.user} />

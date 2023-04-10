@@ -1,9 +1,21 @@
-import { FeaturedPlaylistInfoBarProps } from '@/const/interface';
+import Image from 'next/image';
+
+import { FeaturedPlaylistInfoBarProps, Playlist } from '@/const/interface';
+import { useState } from 'react';
 
 export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => {
+  const [isHoveringHeart, setIsHoveringHeart] = useState(false);
   const spotifyProfileUrl = 'https://open.spotify.com/user/';
 
   const addLike = async () => {
+    // only execute if not already liked by user
+    props.dispatch({
+      type: 'updateLikes',
+      playlist: props.playlist,
+      likes: `${+props.playlist.likes + 1}`,
+      isLiked: true,
+    });
+
     try {
       const response = await fetch('/api/likes', {
         method: 'POST',
@@ -17,15 +29,53 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
         }),
       });
 
-      if (response.ok) {
-        // set like state
+      if (!response.ok) {
+        props.dispatch({
+          type: 'updateLikes',
+          playlist: props.playlist,
+          likes: `${+props.playlist.likes - 1}`,
+          isLiked: false,
+        });
       }
     } catch (error: any) {
       console.error(error);
     }
   };
 
-  const removeLike = () => {};
+  const removeLike = async () => {
+    props.dispatch({
+      type: 'updateLikes',
+      playlist: props.playlist,
+      likes: `${+props.playlist.likes - 1}`,
+      isLiked: false,
+    });
+
+    try {
+      const params = new URLSearchParams({
+        playlistId: props.playlist.id,
+        roundId: props.playlist.round_id,
+        userId: props.user?.id ?? '',
+      });
+
+      const response = await fetch(`/api/likes?${params}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        props.dispatch({
+          type: 'updateLikes',
+          playlist: props.playlist,
+          likes: `${+props.playlist.likes + 1}`,
+          isLiked: true,
+        });
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="grid grid-cols-7 border border-black mb-3 p-3 rounded-xl text-black">
@@ -44,12 +94,35 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
       </div>
       <div className="col-span-1 max-w-36 my-auto pl-3">
         {props.user && (
-          <button
-            onClick={addLike}
-            className="border border-green-700 text-green-700 bg-white hover:bg-green-500 hover:text-white py-1 w-full rounded-md"
-          >
-            like
-          </button>
+          <>
+            {!props.playlist.is_liked && (
+              <button
+                onMouseEnter={() => setIsHoveringHeart(true)}
+                onMouseLeave={() => setIsHoveringHeart(false)}
+                onClick={addLike}
+                className="text-green-700 bg-white hover:text-white py-1 w-full rounded-md"
+              >
+                <Image
+                  className="mx-auto"
+                  src={isHoveringHeart ? 'like_hover.svg' : 'like_empty.svg'}
+                  alt="like submission"
+                  width={30}
+                  height={20}
+                />
+              </button>
+            )}
+            {props.playlist.is_liked && (
+              <button onClick={removeLike} className="py-1 w-full rounded-md">
+                <Image
+                  className="mx-auto"
+                  src="like_filled.svg"
+                  alt="like submission"
+                  width={30}
+                  height={20}
+                />
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>

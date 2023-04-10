@@ -35,8 +35,6 @@ export async function getPlaylistInfo(spotifyId: string, accessToken: string) {
       }
     );
 
-    console.log(response);
-
     return await response.data;
   } catch (error) {
     console.error('Error fetching playlist info:', error);

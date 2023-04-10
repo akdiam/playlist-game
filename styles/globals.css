@@ -12,6 +12,10 @@ body {
   background: white;
 }
 
+.aura {
+  color: #FF7F50;
+}
+
 a {
   text-decoration: underline;
 }

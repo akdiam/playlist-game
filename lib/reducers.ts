@@ -6,21 +6,12 @@ export const renderedPlaylistsReducer = (playlists: Playlist[], action: any) => 
       return [...playlists, ...action.playlists];
     case 'removeSubmission':
       return [...action.playlists];
-    case 'addLike':
+    case 'updateLikes':
       return playlists.map((playlist) => {
         if (playlist.id === action.playlist.id) {
           let likedPlaylist = action.playlist;
-          likedPlaylist.likes = `${+likedPlaylist.likes + 1}`;
-          return likedPlaylist;
-        } else {
-          return playlist;
-        }
-      });
-    case 'removeLike':
-      return playlists.map((playlist) => {
-        if (playlist.id === action.playlist.id) {
-          let likedPlaylist = action.playlist;
-          likedPlaylist.likes = `${+likedPlaylist.likes - 1}`;
+          likedPlaylist.likes = action.likes;
+          likedPlaylist.is_liked = action.isLiked;
           return likedPlaylist;
         } else {
           return playlist;
