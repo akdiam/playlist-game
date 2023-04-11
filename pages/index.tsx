@@ -40,11 +40,13 @@ const Home: NextPage<{
         <div className="pb-14 border-b-2 border-gray-700">
           <h1 className="text-4xl mb-6 font-semibold">
             <span>welcome to </span>
-            <u>playlist forum</u>
+            <span className="before:block before:absolute before:-inset-1 before:-skew-y-2 before:bg-[#FF7F50] relative inline-block">
+              <u className="relative text-white">playlist forum</u>
+            </span>
             {user !== null && <span>, {user.display_name}!</span>}
           </h1>
           <div className="text-2xl">today&apos;s playlist aura: </div>
-          <h2 id="aura" className="text-3xl md:text-4xl lg:text-7xl font-bold aura mb-6">
+          <h2 id="aura" className="text-3xl md:text-4xl lg:text-7xl font-bold mb-6">
             LUDICROUSLY CAPACIOUS
           </h2>
           <ActionBox user={user} submittedPlaylist={submittedPlaylist} />

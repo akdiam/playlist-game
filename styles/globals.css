@@ -47,11 +47,33 @@ iframe, .commentsContainer {
   position: absolute;
   top: 31vh;
   left: 50%;
-  transform: translate(700%, -50%);
+  transform: translate(740%, -50%);
 }
 
 .iframe-loading {
   opacity: 0;
+  animation: fadeOut 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  -webkit-animation: fadeOut 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes fadeIn {
@@ -75,8 +97,8 @@ iframe, .commentsContainer {
 }
 
 .iframe-visible {
-  animation: fadeIn 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-  -webkit-animation: fadeIn 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: fadeIn 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  -webkit-animation: fadeIn 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .spinner-loading {

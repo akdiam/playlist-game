@@ -1,10 +1,12 @@
 import Image from 'next/image';
 
 import { FeaturedPlaylistInfoBarProps, Playlist } from '@/const/interface';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { localDateTime } from '@/util/stringUtil';
 
 export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => {
   const [isHoveringHeart, setIsHoveringHeart] = useState(false);
+  const [localDateTimeString, setLocalDateTimeString] = useState('');
   const spotifyProfileUrl = 'https://open.spotify.com/user/';
 
   const addLike = async () => {
@@ -77,6 +79,12 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
     }
   };
 
+  useEffect(() => {
+    setLocalDateTimeString(
+      localDateTime(props.playlist.submission_date, props.playlist.submission_time)
+    );
+  }, [props.playlist.id]);
+
   return (
     <div className="grid grid-cols-7 border border-black mb-3 p-3 rounded-xl text-black">
       <div className="col-span-6 flex flex-col w-auto">
@@ -87,9 +95,8 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
           <i>
             submitted by{' '}
             <a href={spotifyProfileUrl + props.playlist.user_id}>{props.playlist.display_name}</a>
+            &nbsp; {localDateTimeString}
           </i>
-          &nbsp;|&nbsp;
-          <i>{props.playlist.likes} likes</i>
         </div>
       </div>
       <div className="col-span-1 max-w-36 my-auto pl-3">
@@ -100,7 +107,7 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
                 onMouseEnter={() => setIsHoveringHeart(true)}
                 onMouseLeave={() => setIsHoveringHeart(false)}
                 onClick={addLike}
-                className="text-green-700 bg-white hover:text-white py-1 w-full rounded-md"
+                className="text-green-700 text-gray-400 hover:text-[#FF4E4E] bg-white w-full rounded-md"
               >
                 <Image
                   className="mx-auto"
@@ -109,10 +116,11 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
                   width={30}
                   height={20}
                 />
+                {props.playlist.likes}
               </button>
             )}
             {props.playlist.is_liked && (
-              <button onClick={removeLike} className="py-1 w-full rounded-md">
+              <button onClick={removeLike} className="my-auto w-full rounded-md text-[#FF4E4E]">
                 <Image
                   className="mx-auto"
                   src="like_filled.svg"
@@ -120,6 +128,7 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
                   width={30}
                   height={20}
                 />
+                {props.playlist.likes}
               </button>
             )}
           </>

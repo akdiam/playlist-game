@@ -4,9 +4,10 @@ import pool from '../lib/db';
 const PAGE_SIZE = 100;
 
 export async function submitPlaylist(id, spotifyId, userId, name, roundId, coverImageSrc) {
-  const { rows } = await pool.query(
-    `WITH ins AS (
-      INSERT INTO playlistgame.playlists (id, playlist_id, user_id, name, submission_date, submission_time, round_id, cover_image_src)
+  try {
+    const { rows } = await pool.query(
+      `WITH ins AS (
+      INSERT INTO playlistgame.playlists (id, spotify_id, user_id, name, submission_date, submission_time, round_id, cover_image_src)
       VALUES ($1, $2, $3, $4, CURRENT_DATE, CURRENT_TIME, $5, $6)
       ON CONFLICT (id) DO UPDATE SET
         name = EXCLUDED.name,
@@ -19,10 +20,13 @@ export async function submitPlaylist(id, spotifyId, userId, name, roundId, cover
       LEFT JOIN playlistgame.playlists p ON ins.id = p.id
       LEFT JOIN playlistgame.likes l ON p.id = l.playlist_id
       GROUP BY p.id, ins.name, ins.cover_image_src;`,
-    [id, spotifyId, userId, name, roundId, coverImageSrc]
-  );
-
-  return rows && rows.length > 0 ? JSON.parse(JSON.stringify(rows[0])) : null;
+      [id, spotifyId, userId, name, roundId, coverImageSrc]
+    );
+    return rows && rows.length > 0 ? JSON.parse(JSON.stringify(rows[0])) : null;
+  } catch (error) {
+    console.log(error.message);
+    return error;
+  }
 }
 
 export async function removePlaylist(submissionId) {

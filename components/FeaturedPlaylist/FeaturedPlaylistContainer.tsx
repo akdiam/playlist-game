@@ -8,15 +8,14 @@ import { CommentsContainer } from './CommentsContainer';
 export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps) => {
   const [isIframeLoading, setIsIframeLoading] = useState(true);
   const [hasComponentMounted, setHasComponentMounted] = useState(false);
-  const [isLikedByUser, setIsLikedByUser] = useState();
 
   const iframeVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
+    hidden: { opacity: 0, scale: 1 },
     visible: { opacity: 1, scale: 1 },
   };
 
   const iframeTransition = {
-    duration: 0.1,
+    duration: 0.01,
     ease: 'easeOut',
   };
 
@@ -35,15 +34,15 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
         <div className="md:relative">
           {props.featuredPlaylist && (
             <AnimatePresence mode="popLayout">
-              <motion.div
+              <div
                 style={{ willChange: 'opacity, transform' }}
                 className="md:absolute inset-0 w-full"
-                key={props.featuredPlaylist.id}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                variants={iframeVariants}
-                transition={iframeTransition}
+                // key={props.featuredPlaylist.id}
+                // initial="hidden"
+                // animate="visible"
+                // exit="hidden"
+                // variants={iframeVariants}
+                // transition={iframeTransition}
               >
                 <FeaturedPlaylistInfoBar
                   playlist={props.featuredPlaylist}
@@ -83,7 +82,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                     <div className="md:w-1/2 lg:w-2/3 placeholder iframe-loading"></div>
                   )}
                 </div>
-              </motion.div>
+              </div>
             </AnimatePresence>
           )}
           {!props.featuredPlaylist && <div>no submissions yet!</div>}

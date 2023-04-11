@@ -61,7 +61,7 @@ export const SubmittedPlaylistContainer = (props: submittedPlaylistContainerProp
                   {isRemovalLoading && <div>removing submission...</div>}
                   {!isRemovalLoading && (
                     <>
-                      <div>proceed with removal?</div>{' '}
+                      <div>proceed with removal?</div>
                       <button
                         onClick={handleRemove}
                         className="mr-2 mt-1 border border-red-700 text-red-700 hover:bg-red-500 hover:text-white py-1 px-3 rounded-md"

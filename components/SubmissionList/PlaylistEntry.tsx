@@ -1,8 +1,11 @@
 import Image from 'next/image';
 
 import { PlaylistEntryProps } from '@/const/interface';
+import { timeAgo } from '@/util/stringUtil';
 
 export const PlaylistEntry = (props: PlaylistEntryProps) => {
+  const displayTime = timeAgo(props.playlist.submission_date, props.playlist.submission_time);
+
   return (
     <div className="grid grid-cols-12 w-full py-3 px-3 items-start">
       <div className="col-span-2 max-w-24 grid-rows-2">
@@ -17,7 +20,7 @@ export const PlaylistEntry = (props: PlaylistEntryProps) => {
           {props.playlist.name.length === 0 && <span>&empty;</span>}
         </div>
         <div className="row-span-1 text-xs font-thin truncate">
-          <i>{`submitted by ${props.playlist.display_name} at ${props.playlist.submission_time} UTC`}</i>
+          <i>{`submitted by ${props.playlist.display_name} ${displayTime}`}</i>
         </div>
       </div>
       <div className="col-span-1 max-w-24 place-self-center">
