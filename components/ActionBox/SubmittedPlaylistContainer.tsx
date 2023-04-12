@@ -40,7 +40,7 @@ export const SubmittedPlaylistContainer = (props: submittedPlaylistContainerProp
   return (
     <>
       <div className="text-2xl mb-3">your submission:</div>
-      <div className="w-full md:w-1/2 lg:w-1/3 flex p-3 border border-black text-black rounded-xl shadow-sm">
+      <div className="w-full md:w-1/2 lg:w-1/3 flex p-3 border border-black rounded-xl shadow-sm">
         <a href={spotifyPlaylistUrl + props.submittedPlaylist.spotify_id + '?go=1'}>
           <Image
             className="rounded-md object-cover border border-black"

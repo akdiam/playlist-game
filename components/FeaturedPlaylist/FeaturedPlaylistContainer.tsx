@@ -18,8 +18,8 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
   }, []);
 
   return (
-    <div className="w-full md:w-2/3 md:pr-6 mt-0 md:mt-6 pb-3 md:pb-0 border-b-2 md:border-b-0 border-black">
-      <div className={`sticky top-0 md:top-6 z-10 bg-white`}>
+    <div className="text-white md:text-black w-full md:w-2/3 md:pr-6 mt-0 md:mt-6 pb-3 md:pb-0 border-b-2 md:border-b-0 border-black">
+      <div className="featured-playlist-bg sticky top-0 md:top-6 z-10">
         <div className="md:relative">
           {props.featuredPlaylist && (
             <div
@@ -40,7 +40,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                     <div
                       className={`${
                         isIframeLoading ? 'spinner-loading' : ''
-                      } absolute inset-0 flex justify-center items-center h-[152px] md:h-[65vh] border border-gray-400 rounded-xl mx-3 md:mx-0 bg-gray-50`}
+                      } absolute inset-0 flex justify-center items-center h-[152px] md:h-[65vh] border border-gray-400 rounded-xl mx-3 md:mx-0 bg-gray-100`}
                     >
                       <Spinner />
                     </div>

@@ -9,7 +9,6 @@ body {
 }
 
 body {
-  color: black;
   background: white;
 }
 
@@ -114,4 +113,22 @@ iframe, .commentsContainer {
   left: 0;
   right: 0;
   pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .featured-playlist-bg {
+      overflow: hidden;
+  }
+  .featured-playlist-bg::before {
+    content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: calc(100% - 152px - 1.5rem);
+      z-index: -1;
+      background: black;
+      /*#303030;*/
+      border-radius: 0 0 1.5rem 1.5rem;
+  }
 }
