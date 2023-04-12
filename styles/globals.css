@@ -102,12 +102,6 @@ iframe, .commentsContainer {
   transition: opacity 200ms;
 }
 
-@media (max-width: 767px) {
-  .sticky-container {
-    height: 100vh;
-  }
-}
-
 @media (min-width: 768px) {
   .sentinel {
     display: none;
