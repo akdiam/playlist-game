@@ -1,4 +1,4 @@
-import { FeaturedPlaylistContainerProps } from '@/const/interface';
+import { FeaturedPlaylistContainerProps } from '@const/interface';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FeaturedPlaylistInfoBar } from './FeaturedPlaylistInfoBar';
 import { useEffect, useState } from 'react';
@@ -29,7 +29,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
   }, []);
 
   return (
-    <div className="w-full md:w-2/3 md:pr-6 mt-0 md:mt-6 pb-10 border-b border-dotted border-gray-400">
+    <div className="w-full md:w-2/3 md:pr-6 mt-0 md:mt-6 pb-3 md:pb-0 border-b-2 md:border-b-0 border-black">
       <div className="sticky top-0 md:top-6 z-10 bg-white">
         <div className="md:relative">
           {props.featuredPlaylist && (
@@ -51,7 +51,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                     <div
                       className={`${
                         isIframeLoading ? 'spinner-loading' : ''
-                      } absolute inset-0 flex justify-center items-center h-[152px] md:h-[65vh] border border-gray-400 rounded-xl mx-3 md:mx-0`}
+                      } absolute inset-0 flex justify-center items-center h-[152px] md:h-[65vh] border border-gray-400 rounded-xl mx-3 md:mx-0 bg-gray-50`}
                     >
                       <Spinner />
                     </div>

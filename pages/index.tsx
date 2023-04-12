@@ -4,11 +4,11 @@ import { useReducer, useState } from 'react';
 import { getSession } from 'next-auth/react';
 
 import { getPlaylists, getSubmittedPlaylist } from '../util/dbUtil';
-import { Playlist, User } from '@/const/interface';
-import { renderedPlaylistsReducer } from '@/lib/reducers';
-import { SubmissionList } from '@/components/SubmissionList/SubmissionList';
-import { FeaturedPlaylistContainer } from '@/components/FeaturedPlaylist/FeaturedPlaylistContainer';
-import { ActionBox } from '@/components/ActionBox/ActionBox';
+import { Playlist, User } from '@const/interface';
+import { renderedPlaylistsReducer } from '@lib/reducers';
+import { SubmissionList } from '@components/SubmissionList/SubmissionList';
+import { FeaturedPlaylistContainer } from '@components/FeaturedPlaylist/FeaturedPlaylistContainer';
+import { ActionBox } from '@components/ActionBox/ActionBox';
 import { Session } from 'next-auth';
 
 const Home: NextPage<{
@@ -77,7 +77,7 @@ export async function getServerSideProps(context: Record<string, any>) {
   let submittedPlaylist: Playlist | null = null;
   let user: User | null = null;
 
-  if (session && session.user?.name) {
+  if (session && session.user?.name && session.user?.id) {
     user = {
       id: session.user.id,
       display_name: session.user.name,

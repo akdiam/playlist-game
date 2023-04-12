@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 import { Spinner } from '../Spinner';
-import { Comment, CommentsContainerProps } from '@/const/interface';
+import { Comment, CommentsContainerProps } from '@const/interface';
 
 export const CommentsContainer = (props: CommentsContainerProps) => {
   const [areCommentsLoading, setAreCommentsLoading] = useState(true);

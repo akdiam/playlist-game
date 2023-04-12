@@ -1,9 +1,9 @@
-import { Comment } from '@/const/interface';
+import { Comment } from '@const/interface';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
 
-import { getComments, sendComment } from '@/util/dbUtil';
+import { getComments, sendComment } from '@util/dbUtil';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

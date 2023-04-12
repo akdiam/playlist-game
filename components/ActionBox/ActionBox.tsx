@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { signIn, signOut } from 'next-auth/react';
 
-import { ActionBoxProps, Playlist } from '@/const/interface';
-import { extractPlaylistId } from '@/util/spotify';
+import { ActionBoxProps, Playlist } from '@const/interface';
+import { extractPlaylistId } from '@util/spotify';
 import { SubmittedPlaylistContainer } from './SubmittedPlaylistContainer';
 
 export const ActionBox = (props: ActionBoxProps) => {

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
-import { PlaylistEntryProps } from '@/const/interface';
-import { timeAgo } from '@/util/stringUtil';
+import { PlaylistEntryProps } from '@const/interface';
+import { timeAgo } from '@util/stringUtil';
 
 export const PlaylistEntry = (props: PlaylistEntryProps) => {
   const displayTime = timeAgo(props.playlist.submission_date, props.playlist.submission_time);
@@ -19,8 +19,13 @@ export const PlaylistEntry = (props: PlaylistEntryProps) => {
           {props.playlist.name.length > 0 && <span>{props.playlist.name}</span>}
           {props.playlist.name.length === 0 && <span>&empty;</span>}
         </div>
-        <div className="row-span-1 text-xs font-thin truncate">
+        <div className="hidden md:block row-span-1 text-xs font-thin truncate">
           <i>{`submitted by ${props.playlist.display_name} ${displayTime}`}</i>
+        </div>
+        <div className="block md:hidden row-span-1 text-xs font-thin truncate">
+          <i>
+            {props.playlist.display_name} &#x2022; {displayTime}
+          </i>
         </div>
       </div>
       <div className="col-span-1 max-w-24 place-self-center">

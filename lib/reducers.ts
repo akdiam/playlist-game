@@ -1,4 +1,4 @@
-import { Playlist } from '@/const/interface';
+import { Playlist } from '@const/interface';
 
 export const renderedPlaylistsReducer = (playlists: Playlist[], action: any) => {
   switch (action.type) {

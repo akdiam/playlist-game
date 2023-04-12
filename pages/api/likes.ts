@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { removeLike, addLike } from '@/util/dbUtil';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
+import { removeLike, addLike } from '@util/dbUtil';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions);

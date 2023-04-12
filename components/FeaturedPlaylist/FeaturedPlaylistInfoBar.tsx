@@ -1,8 +1,8 @@
 import Image from 'next/image';
 
-import { FeaturedPlaylistInfoBarProps, Playlist } from '@/const/interface';
+import { FeaturedPlaylistInfoBarProps } from '@const/interface';
 import { useEffect, useState } from 'react';
-import { localDateTime } from '@/util/stringUtil';
+import { localDateTime } from '@util/stringUtil';
 
 export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => {
   const [isHoveringHeart, setIsHoveringHeart] = useState(false);

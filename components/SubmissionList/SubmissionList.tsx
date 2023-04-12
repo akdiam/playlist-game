@@ -1,4 +1,4 @@
-import { Playlist, SubmissionListProps } from '@/const/interface';
+import { Playlist, SubmissionListProps } from '@const/interface';
 import { PlaylistEntry } from './PlaylistEntry';
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 

@@ -24,23 +24,25 @@ iframe, .commentsContainer {
   height: 65vh;
 }
 
+@media (min-width: 768px) {
 * {
-  scrollbar-width: thin;
-  scrollbar-color: #CCCCCC;
-}
+    scrollbar-width: thin;
+    scrollbar-color: #CCCCCC;
+  }
 
-*::-webkit-scrollbar {
-  width: 7px;
-}
+  *::-webkit-scrollbar {
+    width: 7px;
+  }
 
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-*::-webkit-scrollbar-thumb {
-  background-color: #CCCCCC;
-  border-radius: 14px;
-  border: 3px solid #CCCCCC;
+  *::-webkit-scrollbar-thumb {
+    background-color: #CCCCCC;
+    border-radius: 14px;
+    border: 3px solid #CCCCCC;
+  }
 }
 
 .iframe-loading {

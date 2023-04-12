@@ -1,13 +1,14 @@
 import { randomUUID } from 'crypto';
 import { submitPlaylist } from '../../../util/dbUtil';
 import { getPlaylistInfo } from '../../../util/spotify';
-import { Playlist } from '@/const/interface';
+import { Playlist } from '@const/interface';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
+import { Session } from 'next-auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
+  const session: Session | null = await getServerSession(req, res, authOptions);
 
   if (!session) {
     res.status(401).json({ error: 'Unauthorized' });
@@ -18,11 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const playlistInfoFromSpotify = await getPlaylistInfo(
         req.body.spotifyId,
-        session.accessToken ?? ''
+        session?.accessToken ?? ''
       );
       const id = req.body.id ? req.body.id : randomUUID();
       const spotifyId = req.body.spotifyId;
-      const userId = session.user.id;
+      const userId = session.user?.id;
       const name = playlistInfoFromSpotify.name;
       const roundId = req.body.roundId;
       const coverImageSrc = playlistInfoFromSpotify.images[0].url;
@@ -35,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         roundId,
         coverImageSrc
       );
-      if (session.user.name) {
+      if (session.user?.name) {
         submittedPlaylist.display_name = session.user.name;
       }
       res.status(200).json({ submittedPlaylist });

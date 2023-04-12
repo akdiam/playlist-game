@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-import { submittedPlaylistContainerProps } from '@/const/interface';
+import { submittedPlaylistContainerProps } from '@const/interface';
 
 export const SubmittedPlaylistContainer = (props: submittedPlaylistContainerProps) => {
   const [isSyncLoading, setIsSyncLoading] = useState(false);
@@ -41,7 +41,7 @@ export const SubmittedPlaylistContainer = (props: submittedPlaylistContainerProp
     <>
       <div className="text-2xl mb-3">your submission:</div>
       <div className="w-full md:w-1/2 lg:w-1/3 flex p-3 border border-black text-black rounded-xl shadow-sm">
-        <a href={spotifyPlaylistUrl + props.submittedPlaylist.spotify_id}>
+        <a href={spotifyPlaylistUrl + props.submittedPlaylist.spotify_id + '?go=1'}>
           <Image
             className="rounded-md object-cover border border-black"
             src={props.submittedPlaylist.cover_image_src}
