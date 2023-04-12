@@ -50,7 +50,7 @@ export const SubmissionList = (props: SubmissionListProps) => {
           ref={itemRefs.current[i]}
           key={playlist.id}
           className={`border-b w-full border-gray-700 border-dotted flex flex-row justify-between h-30 hover:cursor-pointer ${
-            playlist?.id !== props.featuredPlaylist.id && 'hover:bg-green-200'
+            playlist?.id !== props.featuredPlaylist.id && 'md:hover:bg-green-200'
           } ${
             playlist?.id === props.featuredPlaylist.id
               ? 'bg-black text-white'

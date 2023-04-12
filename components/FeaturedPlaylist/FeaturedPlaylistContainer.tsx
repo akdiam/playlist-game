@@ -1,23 +1,16 @@
 import { FeaturedPlaylistContainerProps } from '@const/interface';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FeaturedPlaylistInfoBar } from './FeaturedPlaylistInfoBar';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, RefObject } from 'react';
 import { Spinner } from '../Spinner';
 import { CommentsContainer } from './CommentsContainer';
 
 export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps) => {
   const [isIframeLoading, setIsIframeLoading] = useState(true);
   const [hasComponentMounted, setHasComponentMounted] = useState(false);
-
-  const iframeVariants = {
-    hidden: { opacity: 0, scale: 1 },
-    visible: { opacity: 1, scale: 1 },
-  };
-
-  const iframeTransition = {
-    duration: 0.01,
-    ease: 'easeOut',
-  };
+  const [spacerHeight, setSpacerHeight] = useState(0);
+  const stickyContainerRef: RefObject<HTMLDivElement> = useRef(null);
+  const sentinelRef: RefObject<HTMLDivElement> = useRef(null);
 
   useEffect(() => {
     setIsIframeLoading(true);
@@ -28,9 +21,47 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
     setHasComponentMounted(true);
   }, []);
 
+  const handleIntersection = (entries: any) => {
+    const entry = entries[0];
+
+    if (stickyContainerRef?.current?.style && sentinelRef?.current?.style?.display !== 'none') {
+      if (entry.isIntersecting) {
+        stickyContainerRef.current.style.position = 'sticky';
+        setSpacerHeight(0);
+      } else {
+        stickyContainerRef.current.style.position = 'fixed';
+        setSpacerHeight(stickyContainerRef.current.offsetHeight);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!stickyContainerRef.current || !sentinelRef.current) return;
+    const sentinelDisplayStyle = getComputedStyle(sentinelRef.current).display;
+    if (sentinelDisplayStyle === 'none') return;
+
+    const observer = new IntersectionObserver(handleIntersection, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 1.0,
+    });
+
+    if (!sentinelRef.current.className.includes('hidden')) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => {
+      if (sentinelRef.current) {
+        observer.unobserve(sentinelRef.current);
+      }
+    };
+  }, [stickyContainerRef, sentinelRef]);
+
   return (
     <div className="w-full md:w-2/3 md:pr-6 mt-0 md:mt-6 pb-3 md:pb-0 border-b-2 md:border-b-0 border-black">
-      <div className="sticky top-0 md:top-6 z-10 bg-white">
+      <div ref={sentinelRef} className="sentinel"></div>
+      <div style={{ height: spacerHeight }}></div>
+      <div ref={stickyContainerRef} className="sticky top-0 md:top-6 z-10 bg-white">
         <div className="md:relative">
           {props.featuredPlaylist && (
             <div
