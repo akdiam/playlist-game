@@ -1,15 +1,12 @@
 import { FeaturedPlaylistContainerProps } from '@const/interface';
 import { FeaturedPlaylistInfoBar } from './FeaturedPlaylistInfoBar';
-import { useEffect, useState, useRef, RefObject } from 'react';
+import { useEffect, useState } from 'react';
 import { Spinner } from '../Spinner';
 import { CommentsContainer } from './CommentsContainer';
 
 export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps) => {
   const [isIframeLoading, setIsIframeLoading] = useState(true);
   const [hasComponentMounted, setHasComponentMounted] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-
-  const stickyContainerRef: RefObject<HTMLDivElement> = useRef(null);
 
   useEffect(() => {
     setIsIframeLoading(true);
@@ -20,27 +17,9 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
     setHasComponentMounted(true);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (stickyContainerRef.current) {
-      const topOffset = Math.max(0, 6 - scrollY);
-      stickyContainerRef.current.style.top = `${topOffset}px`;
-    }
-  }, [scrollY]);
-
   return (
     <div className="w-full md:w-2/3 md:pr-6 mt-0 md:mt-6 pb-3 md:pb-0 border-b-2 md:border-b-0 border-black">
-      <div ref={stickyContainerRef} className={`sticky top-0 md:top-6 z-10 bg-white`}>
+      <div className={`sticky top-0 md:top-6 z-10 bg-white`}>
         <div className="md:relative">
           {props.featuredPlaylist && (
             <div
