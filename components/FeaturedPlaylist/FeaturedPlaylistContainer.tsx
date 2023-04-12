@@ -9,6 +9,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
   const [isIframeLoading, setIsIframeLoading] = useState(true);
   const [hasComponentMounted, setHasComponentMounted] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(0);
+
   const stickyContainerRef: RefObject<HTMLDivElement> = useRef(null);
   const sentinelRef: RefObject<HTMLDivElement> = useRef(null);
 
@@ -21,19 +22,50 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
     setHasComponentMounted(true);
   }, []);
 
-  const handleIntersection = (entries: any) => {
+  function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+
+    return ((...args: Parameters<T>): any => {
+      const later = () => {
+        timeout = null;
+        func(...args);
+      };
+
+      if (timeout !== null) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(later, wait);
+    }) as T;
+  }
+
+  const handleIntersection = debounce((entries: any) => {
     const entry = entries[0];
 
     if (stickyContainerRef?.current?.style && sentinelRef?.current?.style?.display !== 'none') {
       if (entry.isIntersecting) {
+        console.log('setting sticky');
         stickyContainerRef.current.style.position = 'sticky';
         setSpacerHeight(0);
       } else {
+        console.log('setting fixed');
         stickyContainerRef.current.style.position = 'fixed';
         setSpacerHeight(stickyContainerRef.current.offsetHeight);
       }
     }
+  }, 100);
+
+  const handleResize = () => {
+    if (stickyContainerRef.current && spacerHeight !== 0) {
+      setSpacerHeight(stickyContainerRef.current.offsetHeight);
+    }
   };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [handleResize]);
 
   useEffect(() => {
     if (!stickyContainerRef.current || !sentinelRef.current) return;
@@ -61,7 +93,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
     <div className="w-full md:w-2/3 md:pr-6 mt-0 md:mt-6 pb-3 md:pb-0 border-b-2 md:border-b-0 border-black">
       <div ref={sentinelRef} className="sentinel"></div>
       <div style={{ height: spacerHeight }}></div>
-      <div ref={stickyContainerRef} className="sticky top-0 md:top-6 z-10 bg-white">
+      <div ref={stickyContainerRef} className={`sticky top-0 md:top-6 z-10 bg-white`}>
         <div className="md:relative">
           {props.featuredPlaylist && (
             <div
