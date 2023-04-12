@@ -43,7 +43,7 @@ export const SubmissionList = (props: SubmissionListProps) => {
     <ul
       onKeyDown={handleKeyDown}
       tabIndex={0}
-      className={`w-full md:w-1/3 md:border-l-2 border-gray-700 focus:outline-none`}
+      className={`w-full md:w-1/3 md:border-l-2 border-gray-700 focus:outline-none overflow-auto md:overflow-visible`}
     >
       {playlists.map((playlist, i) => (
         <li

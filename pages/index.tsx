@@ -36,8 +36,8 @@ const Home: NextPage<{
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="max-w-90 mx-auto p-3 md:p-6">
-        <div className="pb-14 border-b-2 border-gray-700">
+      <main className="max-w-90 mx-auto md:p-6">
+        <div className="p-3 md:p-0 border-b-2 border-gray-700">
           <h1 className="text-4xl mb-6 font-semibold">
             <span>welcome to </span>
             <span className="before:block before:absolute before:-inset-1 before:-skew-y-2 before:bg-[#FF7F50] relative inline-block">
@@ -51,7 +51,7 @@ const Home: NextPage<{
           </h2>
           <ActionBox user={user} submittedPlaylist={submittedPlaylist} />
         </div>
-        <div className="md:flex md:min-h-screen border-b-2 border-black">
+        <div className="flex flex-col md:flex-row md:min-h-screen border-b-2 border-black sticky-container overflow-hidden md:overflow-visible">
           <FeaturedPlaylistContainer
             featuredPlaylist={featuredPlaylist}
             rank={featuredPlaylistRank}

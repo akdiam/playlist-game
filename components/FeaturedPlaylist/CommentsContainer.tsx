@@ -76,7 +76,7 @@ export const CommentsContainer = (props: CommentsContainerProps) => {
   }, [props.featuredPlaylist.id]);
 
   return (
-    <div className="invisible lg:visible commentsContainer flex flex-col justify-between md:w-1/2 lg:w-1/3 invisible md:visible border border-black rounded-xl mr-3">
+    <div className="hidden md:flex h-[25vh] md:h-[65vh] flex flex-col justify-between md:w-1/2 lg:w-1/3 border border-black rounded-xl mr-3">
       <div className="p-3 italic font-bold border-b border-black shadow-sm">comments</div>
       {areCommentsLoading && (
         <div className="mx-auto">

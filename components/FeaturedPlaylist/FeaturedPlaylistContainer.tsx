@@ -29,46 +29,38 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
   }, []);
 
   return (
-    <div className="w-full md:w-2/3 pr-6 mt-6">
-      <div className="sticky top-6 z-10 bg-white">
+    <div className="w-full md:w-2/3 md:pr-6 mt-0 md:mt-6 pb-10 border-b border-dotted border-gray-400">
+      <div className="sticky top-0 md:top-6 z-10 bg-white">
         <div className="md:relative">
           {props.featuredPlaylist && (
-            <AnimatePresence mode="popLayout">
-              <div
-                style={{ willChange: 'opacity, transform' }}
-                className="md:absolute inset-0 w-full"
-                // key={props.featuredPlaylist.id}
-                // initial="hidden"
-                // animate="visible"
-                // exit="hidden"
-                // variants={iframeVariants}
-                // transition={iframeTransition}
-              >
-                <FeaturedPlaylistInfoBar
-                  playlist={props.featuredPlaylist}
-                  rank={props.rank}
-                  user={props.user}
-                  dispatch={props.dispatch}
-                  setFeaturedPlaylist={props.setFeaturedPlaylist}
-                />
-                <div className="md:flex md:flex-row">
-                  <CommentsContainer featuredPlaylist={props.featuredPlaylist} user={props.user} />
+            <div
+              style={{ willChange: 'opacity, transform' }}
+              className="md:absolute inset-0 w-full"
+            >
+              <FeaturedPlaylistInfoBar
+                playlist={props.featuredPlaylist}
+                rank={props.rank}
+                user={props.user}
+                dispatch={props.dispatch}
+                setFeaturedPlaylist={props.setFeaturedPlaylist}
+              />
+              <div className="md:flex md:flex-row">
+                <CommentsContainer featuredPlaylist={props.featuredPlaylist} user={props.user} />
+                <div className="relative md:w-1/2 lg:w-2/3 h-[152px] md:h-[65vh]">
                   {isIframeLoading && (
                     <div
                       className={`${
                         isIframeLoading ? 'spinner-loading' : ''
-                      } fixed md:w-1/2 lg:w-2/3`}
+                      } absolute inset-0 flex justify-center items-center h-[152px] md:h-[65vh] border border-gray-400 rounded-xl mx-3 md:mx-0`}
                     >
-                      <div className="centerSpinner">
-                        <Spinner />
-                      </div>
+                      <Spinner />
                     </div>
                   )}
                   {hasComponentMounted && (
                     <iframe
                       className={`${
                         isIframeLoading ? 'iframe-loading' : 'iframe-visible'
-                      } md:w-1/2 lg:w-2/3`}
+                      } px-3 md:px-0 w-full h-[152px] md:h-[65vh]`}
                       src={`https://open.spotify.com/embed/playlist/${props.featuredPlaylist.spotify_id}`}
                       width="100%"
                       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -83,7 +75,7 @@ export const FeaturedPlaylistContainer = (props: FeaturedPlaylistContainerProps)
                   )}
                 </div>
               </div>
-            </AnimatePresence>
+            </div>
           )}
           {!props.featuredPlaylist && <div>no submissions yet!</div>}
         </div>

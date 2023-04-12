@@ -86,7 +86,7 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
   }, [props.playlist.id]);
 
   return (
-    <div className="grid grid-cols-7 border border-black mb-3 p-3 rounded-xl text-black">
+    <div className="grid grid-cols-7 md:border border-black md:mb-3 p-3 rounded-none md:rounded-xl text-black">
       <div className="col-span-6 flex flex-col w-auto">
         <div className="text-2xl font-bold truncate pb-1">
           {props.rank}.&nbsp; {props.playlist.name}
@@ -107,7 +107,7 @@ export const FeaturedPlaylistInfoBar = (props: FeaturedPlaylistInfoBarProps) => 
                 onMouseEnter={() => setIsHoveringHeart(true)}
                 onMouseLeave={() => setIsHoveringHeart(false)}
                 onClick={addLike}
-                className="text-green-700 text-gray-400 hover:text-[#FF4E4E] bg-white w-full rounded-md"
+                className="text-gray-400 hover:text-[#FF4E4E] bg-white w-full rounded-md"
               >
                 <Image
                   className="mx-auto"

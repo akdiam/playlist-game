@@ -46,7 +46,7 @@ export const ActionBox = (props: ActionBoxProps) => {
   };
 
   return (
-    <>
+    <div className="mb-6">
       {props.user === null && (
         <>
           <h2 className="text-2xl mb-2">to participate:</h2>
@@ -89,6 +89,6 @@ export const ActionBox = (props: ActionBoxProps) => {
           )}
         </>
       )}
-    </>
+    </div>
   );
 };
