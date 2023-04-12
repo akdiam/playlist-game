@@ -5,6 +5,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 export const SubmissionList = (props: SubmissionListProps) => {
   const playlists: Playlist[] = props.renderedPlaylists;
   const [selected, setSelected] = useState(0);
+  const [firstRender, setFirstRender] = useState(true);
 
   const itemRefs = useRef<React.RefObject<HTMLLIElement>[]>(
     playlists.map(() => React.createRef<HTMLLIElement>())
@@ -36,7 +37,10 @@ export const SubmissionList = (props: SubmissionListProps) => {
   };
 
   useEffect(() => {
-    scrollToSelectedItem();
+    if (!firstRender) {
+      scrollToSelectedItem();
+    }
+    setFirstRender(false);
   }, [selected]);
 
   return (
