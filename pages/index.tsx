@@ -51,7 +51,7 @@ const Home: NextPage<{
           </h2>
           <ActionBox user={user} submittedPlaylist={submittedPlaylist} />
         </div>
-        <div className="flex flex-col md:flex-row md:min-h-screen border-b-2 border-black sticky-container overflow-hidden md:overflow-visible">
+        <div className="flex flex-col md:flex-row md:min-h-screen border-b-2 border-black sticky-container h-screen md:h-auto overflow-hidden md:overflow-visible">
           <FeaturedPlaylistContainer
             featuredPlaylist={featuredPlaylist}
             rank={featuredPlaylistRank}
